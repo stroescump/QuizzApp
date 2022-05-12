@@ -7,6 +7,9 @@ plugins {
 
 ext {
     lifecycle_version = "2.4.1"
+    retrofit_version = "2.9.0"
+    okhttp_version = "4.9.3"
+    gson_version = "2.9.0"
 }
 
 

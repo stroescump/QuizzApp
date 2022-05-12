@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id("kotlin-parcelize")
 }
 
 android {
@@ -50,6 +51,7 @@ dependencies {
     // Lifecycles only (without ViewModel or LiveData)
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycle_version")
-
-
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.okhttp3:logging-interceptor:$okhttp_version")
+    implementation("com.squareup.retrofit2:converter-gson:$gson_version")
 }
