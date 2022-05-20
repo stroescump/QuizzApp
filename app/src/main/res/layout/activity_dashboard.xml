@@ -38,25 +38,56 @@
             app:layout_constraintTop_toTopOf="@id/ivProfile"
             tools:text="Irina" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivXP"
-            android:layout_width="@dimen/dimen_60dp"
-            android:layout_height="@dimen/dimen_60dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
-            app:layout_constraintBottom_toBottomOf="@id/ivProfile"
-            app:layout_constraintEnd_toStartOf="@id/tvXP"
-            app:layout_constraintTop_toTopOf="@id/ivProfile"
-            tools:src="@tools:sample/avatars" />
+        <!--        <androidx.appcompat.widget.AppCompatImageView-->
+        <!--            android:id="@+id/ivXP"-->
+        <!--            android:layout_width="@dimen/dimen_60dp"-->
+        <!--            android:layout_height="@dimen/dimen_60dp"-->
+        <!--            android:layout_marginEnd="@dimen/dimen_10dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@id/ivProfile"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/tvXP"-->
+        <!--            app:layout_constraintTop_toTopOf="@id/ivProfile"-->
+        <!--            tools:src="@tools:sample/avatars" />-->
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvXP"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            app:layout_constraintBottom_toBottomOf="@id/ivProfile"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ivProfile"
-            tools:text="200,000" />
+        <!--        <androidx.appcompat.widget.AppCompatTextView-->
+        <!--            android:id="@+id/tvXP"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="@dimen/dimen_10dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@id/ivProfile"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="@id/ivProfile"-->
+        <!--            tools:text="200,000" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cvQuiz1"
+        android:layout_width="@dimen/dimen_130dp"
+        android:layout_height="@dimen/dimen_130dp"
+        android:layout_margin="@dimen/dimen_50dp"
+        android:background="@drawable/bg_cardview_quiz"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/containerProfile" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivQuizMath"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:src="@drawable/math"
+        android:translationX="-40dp"
+        android:translationY="-40dp"
+        app:layout_constraintBottom_toBottomOf="@id/cvQuiz1"
+        app:layout_constraintEnd_toEndOf="@id/cvQuiz1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvQuizCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_18sp"
+        app:layout_constraintEnd_toEndOf="@id/cvQuiz1"
+        app:layout_constraintStart_toStartOf="@id/cvQuiz1"
+        app:layout_constraintTop_toBottomOf="@id/cvQuiz1"
+        tools:text="Maths" />
 </androidx.constraintlayout.widget.ConstraintLayout>

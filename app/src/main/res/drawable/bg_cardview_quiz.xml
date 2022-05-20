@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="@dimen/dimen_130dp"
+        android:height="@dimen/dimen_130dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" />
+            <corners android:radius="@dimen/dimen_20dp" />
+        </shape>
+    </item>
+    <item
+        android:width="@dimen/dimen_130dp"
+        android:height="@dimen/dimen_80dp"
+        android:drawable="@drawable/shadow_quiz_cardview"
+        android:top="@dimen/dimen_60dp" android:left="-20dp">
+    </item>
+</layer-list>
