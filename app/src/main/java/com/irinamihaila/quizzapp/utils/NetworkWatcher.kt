@@ -25,7 +25,6 @@ class NetworkWatcher(private val connectivityManager: ConnectivityManager) :
         override fun onLost(network: Network) {
             super.onLost(network)
             if (value != false)
-                this@NetworkWatcher.distinctUntilChanged()
                 postValue(false)
         }
     }

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.distinctUntilChanged
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.irinamihaila.quizzapp.R
@@ -45,13 +44,19 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        networkWatcher.distinctUntilChanged().observe(this) {
-            handleNetworkWatcher(it)
+        val snackbar = createSnackbar(binding.root, getString(R.string.no_internet))
+        handleNetworkWatcher(networkWatcher.isNetworkConnected(), snackbar)
+        networkWatcher.observe(this) {
+            handleNetworkWatcher(it, snackbar)
         }
     }
 
-    private fun handleNetworkWatcher(isNetworkAvailable: Boolean) {
-        //TODO - create base behavior for lack of network as app is online experience mostly
+    private fun handleNetworkWatcher(isNetworkAvailable: Boolean, snackbar: Snackbar) {
+        if (isNetworkAvailable) {
+            snackbar.dismiss()
+        } else {
+            snackbar.show()
+        }
     }
 
     override fun onPause() {
@@ -59,9 +64,8 @@ abstract class BaseActivity : AppCompatActivity() {
         networkWatcher.removeObservers(this)
     }
 
-    fun showSnackbar(view: View, message: String) {
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
-    }
+    fun createSnackbar(view: View, message: String) =
+        Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE)
 
     private fun ((AlertDialog) -> DialogInterface.OnClickListener)?.notNull(): Boolean {
         return this != null
