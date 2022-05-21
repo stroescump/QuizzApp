@@ -76,4 +76,6 @@ abstract class BaseActivity : AppCompatActivity() {
         object NegativeButton : AlertDialogButton()
     }
 
+    abstract fun setupListeners()
+    abstract fun initViews()
 }

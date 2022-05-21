@@ -7,8 +7,12 @@ import com.irinamihaila.quizzapp.utils.viewBinding
 
 class MainActivity : BaseActivity() {
     override val binding by viewBinding(ActivityMainBinding::inflate)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun setupListeners() {
+        TODO("Not yet implemented")
     }
+
+    override fun initViews() {
+        TODO("Not yet implemented")
+    }
+
 }

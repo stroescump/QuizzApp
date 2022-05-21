@@ -3,4 +3,10 @@
     <string name="ok_button">Ok</string>
     <string name="dismiss">Dismiss</string>
     <string name="no_internet">Please make sure you\'re connected to internet.</string>
+    <string name="question_goes_here">Question goes here…</string>
+    <string name="first_answer_option">First answer option…</string>
+    <string name="second_answer_option">Second answer option…</string>
+    <string name="third_answer_option">Third answer option…</string>
+    <string name="fourth_answer_option">Fourth answer option…</string>
+    <string name="add_question">Add question</string>
 </resources>

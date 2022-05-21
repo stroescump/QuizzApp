@@ -1,17 +1,17 @@
-package com.irinamihaila.quizzapp.ui.dashboard
+package com.irinamihaila.quizzapp.ui.newquizz
 
 import android.os.Bundle
-import androidx.viewbinding.ViewBinding
-import com.irinamihaila.quizzapp.databinding.ActivityDashboardBinding
+import com.irinamihaila.quizzapp.databinding.ActivityTakeQuizBinding
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.utils.viewBinding
 
-class DashboardActivity : BaseActivity() {
-    override val binding: ViewBinding by viewBinding(ActivityDashboardBinding::inflate)
-    private val viewModel by lazy { DashboardViewModel() }
+class TakeQuizActivity : BaseActivity() {
+    override val binding by viewBinding(ActivityTakeQuizBinding::inflate)
+    private val viewModel by lazy { defaultViewModelProviderFactory.create(TakeQuizViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun setupListeners() {
@@ -21,4 +21,6 @@ class DashboardActivity : BaseActivity() {
     override fun initViews() {
         TODO("Not yet implemented")
     }
+
+
 }
