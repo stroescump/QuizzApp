@@ -34,11 +34,11 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
             btnAddQuestion.setOnClickListener {
                 val correctAnswer = getCorrectAnswer()
                 val newQuestion = Question(
-                    question = etNewQuestion.value(),
-                    answer1 = etAnswer1.value(),
-                    answer2 = etAnswer2.value(),
-                    answer3 = etAnswer3.value(),
-                    answer4 = etAnswer4.value(),
+                    question = layoutQuestionItem.etNewQuestion.value(),
+                    answer1 = layoutQuestionItem.etAnswer1.value(),
+                    answer2 = layoutQuestionItem.etAnswer2.value(),
+                    answer3 = layoutQuestionItem.etAnswer3.value(),
+                    answer4 = layoutQuestionItem.etAnswer4.value(),
                     correctAnswer = correctAnswer
                 )
                 getAdapter().addItem(newQuestion)
@@ -65,12 +65,14 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
     private fun getAdapter() =
         (requireActivity().findViewById<RecyclerView>(R.id.rvNewQuestions).adapter as QuizItemAdapter)
 
-    private fun FragmentCreateQuizBottomSheetBinding.getCorrectAnswer() =
-        when (rbGroup.checkedRadioButtonId) {
-            rbAnswer1.id -> etAnswer1.value()
-            rbAnswer2.id -> etAnswer2.value()
-            rbAnswer3.id -> etAnswer3.value()
-            rbAnswer4.id -> etAnswer4.value()
-            else -> ""
+    private fun getCorrectAnswer() =
+        with(binding.layoutQuestionItem) {
+            when (rbGroup.checkedRadioButtonId) {
+                rbAnswer1.id -> etAnswer1.value()
+                rbAnswer2.id -> etAnswer2.value()
+                rbAnswer3.id -> etAnswer3.value()
+                rbAnswer4.id -> etAnswer4.value()
+                else -> ""
+            }
         }
 }

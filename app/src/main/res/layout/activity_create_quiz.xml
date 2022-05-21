@@ -15,7 +15,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/btnAddMore"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/fragment_create_quiz_bottom_sheet_item" />
+        tools:listitem="@layout/layout_question_item" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnAddMore"

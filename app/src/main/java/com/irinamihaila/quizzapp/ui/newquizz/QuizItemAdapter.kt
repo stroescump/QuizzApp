@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
-import com.irinamihaila.quizzapp.databinding.FragmentCreateQuizBottomSheetItemBinding
+import com.irinamihaila.quizzapp.databinding.LayoutQuestionItemBinding
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.ui.newquizz.QuizItemAdapter.CreateQuizVH
 import com.irinamihaila.quizzapp.utils.toEditable
@@ -13,11 +13,11 @@ class QuizItemAdapter(
     private val questionList: MutableList<Question>,
     private val isCreateMode: Boolean = true
 ) : RecyclerView.Adapter<CreateQuizVH>() {
-    private lateinit var binding: FragmentCreateQuizBottomSheetItemBinding
+    private lateinit var binding: LayoutQuestionItemBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreateQuizVH {
         binding =
-            FragmentCreateQuizBottomSheetItemBinding.inflate(
+            LayoutQuestionItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -32,7 +32,7 @@ class QuizItemAdapter(
     override fun getItemCount(): Int = questionList.size
 
     class CreateQuizVH(
-        private val binding: FragmentCreateQuizBottomSheetItemBinding,
+        private val binding: LayoutQuestionItemBinding,
         private val isCreateMode: Boolean
     ) :
         RecyclerView.ViewHolder(binding.root) {

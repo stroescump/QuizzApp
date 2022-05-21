@@ -11,4 +11,6 @@
     <color name="white_alpha1">#03FFFFFF</color>
     <color name="purple">#5a6aec</color>
     <color name="purple_dark1">#4f60eb</color>
+    <color name="purple_dark2">#4A5AD9</color>
+    <color name="purple_dark3">#3644B3</color>
 </resources>
