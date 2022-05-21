@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizzApp">
         <activity
+            android:name=".ui.dashboard.DashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.newquizz.NewQuizActivity"
             android:exported="false" />
         <activity
