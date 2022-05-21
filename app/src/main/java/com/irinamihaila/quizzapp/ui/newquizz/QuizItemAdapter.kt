@@ -2,6 +2,7 @@ package com.irinamihaila.quizzapp.ui.newquizz
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.irinamihaila.quizzapp.databinding.FragmentCreateQuizBottomSheetItemBinding
 import com.irinamihaila.quizzapp.models.Question
@@ -16,7 +17,11 @@ class QuizItemAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreateQuizVH {
         binding =
-            FragmentCreateQuizBottomSheetItemBinding.inflate(LayoutInflater.from(parent.context))
+            FragmentCreateQuizBottomSheetItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         return CreateQuizVH(binding, isCreateMode)
     }
 
@@ -28,13 +33,13 @@ class QuizItemAdapter(
 
     class CreateQuizVH(
         private val binding: FragmentCreateQuizBottomSheetItemBinding,
-        val isCreateMode: Boolean
+        private val isCreateMode: Boolean
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(question: Question) {
             with(binding) {
-                if (isCreateMode) {
+                if (isCreateMode.not()) {
                     makeFieldsViewOnly()
                 }
                 with(question) {
@@ -43,13 +48,16 @@ class QuizItemAdapter(
                     etAnswer2.text = answer2.toEditable()
                     etAnswer3.text = answer3.toEditable()
                     etAnswer4.text = answer4.toEditable()
+                    rbGroup.check(getCorrectAnswer(question))
                 }
             }
         }
 
         private fun makeFieldsViewOnly() {
             with(binding) {
-                rbGroup.isEnabled = false
+                for (child in rbGroup.children) {
+                    child.isEnabled = false
+                }
                 etNewQuestion.isEnabled = false
                 etAnswer1.isEnabled = false
                 etAnswer2.isEnabled = false
@@ -57,6 +65,17 @@ class QuizItemAdapter(
                 etAnswer4.isEnabled = false
             }
         }
+
+        private fun getCorrectAnswer(question: Question) =
+            with(binding) {
+                when (question.correctAnswer) {
+                    question.answer1 -> rbAnswer1.id
+                    question.answer2 -> rbAnswer2.id
+                    question.answer3 -> rbAnswer3.id
+                    question.answer4 -> rbAnswer4.id
+                    else -> throw IllegalStateException("There can only be 4 types of answers!")
+                }
+            }
     }
 
     fun addItem(question: Question) {
