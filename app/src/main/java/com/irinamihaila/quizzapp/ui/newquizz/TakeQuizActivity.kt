@@ -22,5 +22,9 @@ class TakeQuizActivity : BaseActivity() {
         TODO("Not yet implemented")
     }
 
+    override fun setupObservers() {
+        TODO("Not yet implemented")
+    }
+
 
 }

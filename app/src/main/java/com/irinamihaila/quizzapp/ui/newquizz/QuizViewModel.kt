@@ -6,6 +6,7 @@ import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.irinamihaila.quizzapp.models.Question
+import com.irinamihaila.quizzapp.models.QuizUser
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,4 +62,6 @@ fun getLastQuizNode(userId: String, handler: (key: String?) -> Unit) =
             }
         }
 
+fun createUserNode(quizUser: QuizUser) =
+    Firebase.database.getReference("users/${quizUser.username}").setValue(quizUser)
 

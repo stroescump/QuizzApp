@@ -27,4 +27,8 @@ class CreateQuizActivity : BaseActivity() {
     override fun initViews() {
         binding.rvNewQuestions.adapter = QuizItemAdapter(mutableListOf(), false)
     }
+
+    override fun setupObservers() {
+
+    }
 }

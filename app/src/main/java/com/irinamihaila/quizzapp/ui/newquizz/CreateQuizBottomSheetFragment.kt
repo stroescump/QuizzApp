@@ -11,6 +11,7 @@ import com.irinamihaila.quizzapp.databinding.FragmentCreateQuizBottomSheetBindin
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.value
+import kotlin.random.Random
 
 
 class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
@@ -44,7 +45,7 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
                     correctAnswer = correctAnswer
                 )
                 getAdapter().addItem(newQuestion)
-                viewModel.uploadQuestion(newQuestion)
+                viewModel.uploadQuestion(newQuestion, Random.nextInt().toString())
                 dismiss()
             }
         }

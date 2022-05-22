@@ -21,6 +21,9 @@ abstract class BaseActivity : AppCompatActivity() {
         binding.also {
             setContentView(it.root)
         }
+        initViews()
+        setupListeners()
+        setupObservers()
     }
 
 
@@ -44,7 +47,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val snackbar = createSnackbar(binding.root, getString(R.string.no_internet))
+        val snackbar = createIndefiniteSnackbar(binding.root, getString(R.string.no_internet))
         handleNetworkWatcher(networkWatcher.isNetworkConnected(), snackbar)
         networkWatcher.observe(this) {
             handleNetworkWatcher(it, snackbar)
@@ -64,7 +67,14 @@ abstract class BaseActivity : AppCompatActivity() {
         networkWatcher.removeObservers(this)
     }
 
+    fun displayError(message: String? = null) {
+        createSnackbar(binding.root, message ?: getString(R.string.generic_error))
+    }
+
     fun createSnackbar(view: View, message: String) =
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+
+    private fun createIndefiniteSnackbar(view: View, message: String) =
         Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE)
 
     private fun ((AlertDialog) -> DialogInterface.OnClickListener)?.notNull(): Boolean {
@@ -78,4 +88,5 @@ abstract class BaseActivity : AppCompatActivity() {
 
     abstract fun setupListeners()
     abstract fun initViews()
+    abstract fun setupObservers()
 }

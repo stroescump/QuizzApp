@@ -15,4 +15,8 @@ class MainActivity : BaseActivity() {
         TODO("Not yet implemented")
     }
 
+    override fun setupObservers() {
+        TODO("Not yet implemented")
+    }
+
 }
