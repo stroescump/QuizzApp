@@ -11,7 +11,7 @@ import com.irinamihaila.quizzapp.utils.toEditable
 
 class QuizItemAdapter(
     private val questionList: MutableList<Question>,
-    private val isCreateMode: Boolean = true
+    private val isCreateMode: Boolean = true,
 ) : RecyclerView.Adapter<CreateQuizVH>() {
     private lateinit var binding: LayoutQuestionItemBinding
 
@@ -43,11 +43,11 @@ class QuizItemAdapter(
                     makeFieldsViewOnly()
                 }
                 with(question) {
-                    etNewQuestion.text = this.question.toEditable()
-                    etAnswer1.text = answer1.toEditable()
-                    etAnswer2.text = answer2.toEditable()
-                    etAnswer3.text = answer3.toEditable()
-                    etAnswer4.text = answer4.toEditable()
+                    etNewQuestion.text = this.question?.toEditable()
+                    etAnswer1.text = answer1?.toEditable()
+                    etAnswer2.text = answer2?.toEditable()
+                    etAnswer3.text = answer3?.toEditable()
+                    etAnswer4.text = answer4?.toEditable()
                     rbGroup.check(getCorrectAnswer(question))
                 }
             }

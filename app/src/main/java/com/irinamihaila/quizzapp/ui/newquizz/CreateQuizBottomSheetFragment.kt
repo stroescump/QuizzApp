@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.FragmentCreateQuizBottomSheetBinding
 import com.irinamihaila.quizzapp.models.Question
+import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.value
 
 
@@ -16,6 +17,7 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentCreateQuizBottomSheetBinding? = null
     private val binding get() = _binding!!
+    private val viewModel by lazy { QuizViewModel(SharedPrefsUtils(requireContext())) }
 
     override fun getTheme(): Int {
         return R.style.CustomBottomSheetDialog
@@ -42,6 +44,7 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
                     correctAnswer = correctAnswer
                 )
                 getAdapter().addItem(newQuestion)
+                viewModel.uploadQuestion(newQuestion)
                 dismiss()
             }
         }

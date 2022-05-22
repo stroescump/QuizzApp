@@ -9,4 +9,5 @@
     <string name="third_answer_option">Third answer option…</string>
     <string name="fourth_answer_option">Fourth answer option…</string>
     <string name="add_question">Add question</string>
+    <string name="preference_file_key">com.irinamihaila.quizzapp.sharedprefs</string>
 </resources>
