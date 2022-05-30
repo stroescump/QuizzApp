@@ -15,14 +15,14 @@ class DashboardActivity : BaseActivity() {
     }
 
     override fun setupListeners() {
-        TODO("Not yet implemented")
+
     }
 
     override fun initViews() {
-        TODO("Not yet implemented")
+
     }
 
     override fun setupObservers() {
-        TODO("Not yet implemented")
+
     }
 }

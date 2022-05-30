@@ -14,7 +14,7 @@ import com.irinamihaila.quizzapp.utils.AppResult
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 
 class AuthenticationViewModel(val sharedPrefsUtils: SharedPrefsUtils) : ViewModel() {
-    val uiStateLiveData = MutableLiveData<AppResult<String?>>()
+    val uiStateLiveData = MutableLiveData<AppResult<String>>()
 
     fun login(username: String, password: String) = run {
         uiStateLiveData.value = AppResult.Progress

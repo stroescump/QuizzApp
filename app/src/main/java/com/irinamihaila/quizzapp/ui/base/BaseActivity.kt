@@ -1,9 +1,12 @@
 package com.irinamihaila.quizzapp.ui.base
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
@@ -18,12 +21,16 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.also {
-            setContentView(it.root)
+        try {
+            binding.also {
+                setContentView(it.root)
+            }
+            initViews()
+            setupListeners()
+            setupObservers()
+        } catch (e: Throwable) {
+            displayError(e.localizedMessage)
         }
-        initViews()
-        setupListeners()
-        setupObservers()
     }
 
 
@@ -71,7 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
         createSnackbar(binding.root, message ?: getString(R.string.generic_error))
     }
 
-    fun createSnackbar(view: View, message: String) =
+    private fun createSnackbar(view: View, message: String) =
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
 
     private fun createIndefiniteSnackbar(view: View, message: String) =
@@ -79,6 +86,33 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun ((AlertDialog) -> DialogInterface.OnClickListener)?.notNull(): Boolean {
         return this != null
+    }
+
+    fun <T> navigateTo(destination: Class<T>, isFinishActivity: Boolean = false) {
+        if (destination.superclass.name == BaseActivity::class.java.name) {
+            Intent(this, destination).also {
+                startActivity(it)
+            }
+            if (isFinishActivity) finish()
+        } else {
+            throw IllegalArgumentException("Destination must be an Activity!")
+        }
+    }
+
+    fun showProgress() {
+        try {
+            findViewById<View>(R.id.layoutProgress).visibility = View.VISIBLE
+        } catch (e: Throwable) {
+            throw Throwable("Make sure to include progress layout in your activity!")
+        }
+    }
+
+    fun hideProgress() {
+        try {
+            findViewById<View>(R.id.layoutProgress).visibility = View.GONE
+        } catch (e: Throwable) {
+            throw Throwable("Make sure to include progress layout in your activity!")
+        }
     }
 
     sealed class AlertDialogButton {
