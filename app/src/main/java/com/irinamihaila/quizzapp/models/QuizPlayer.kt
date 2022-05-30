@@ -4,9 +4,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class QuizPlayer(
-    private val firstName: String,
-    private val lastName: String,
-    private val username: String,
-    private val password: String,
-    private val profilePictureURL: String,
-) : QuizUser(firstName, lastName, username, password, profilePictureURL)
+    override val fullName: String,
+    override val username: String,
+    override val password: String,
+    override val profilePictureURL: String,
+) : QuizUser(fullName, username, password, profilePictureURL, "PLAYER")

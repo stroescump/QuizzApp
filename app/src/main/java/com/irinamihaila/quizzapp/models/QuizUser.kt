@@ -6,14 +6,16 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 open class QuizUser(
-    @SerializedName("firstName")
-    private val firstName: String,
-    @SerializedName("lastName")
-    private val lastName: String,
+    @SerializedName("fullName")
+    open val fullName: String,
     @SerializedName("username")
-    private val username: String,
+    open val username: String,
     @SerializedName("password")
-    private val password: String,
+    open val password: String,
     @SerializedName("profilePictureURL")
-    private val profilePictureURL: String,
+    open val profilePictureURL: String,
+    @SerializedName("userType")
+    open val userType: String,
+    @SerializedName("quizId")
+    val quizId: List<String> = emptyList(),
 ) : Parcelable

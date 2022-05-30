@@ -3,4 +3,19 @@
     <string name="ok_button">Ok</string>
     <string name="dismiss">Dismiss</string>
     <string name="no_internet">Please make sure you\'re connected to internet.</string>
+    <string name="question_goes_here">Question goes here…</string>
+    <string name="first_answer_option">First answer option…</string>
+    <string name="second_answer_option">Second answer option…</string>
+    <string name="third_answer_option">Third answer option…</string>
+    <string name="fourth_answer_option">Fourth answer option…</string>
+    <string name="add_question">Add question</string>
+    <string name="preference_file_key">com.irinamihaila.quizzapp.sharedprefs</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="generic_error">An error occured. Please try again.</string>
+    <string name="register">Register</string>
+    <string name="player">Player</string>
+    <string name="author">Author</string>
+    <string name="full_name">Full Name</string>
 </resources>

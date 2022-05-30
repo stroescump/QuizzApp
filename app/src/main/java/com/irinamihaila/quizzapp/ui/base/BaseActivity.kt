@@ -1,9 +1,12 @@
 package com.irinamihaila.quizzapp.ui.base
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
@@ -18,8 +21,15 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.also {
-            setContentView(it.root)
+        try {
+            binding.also {
+                setContentView(it.root)
+            }
+            initViews()
+            setupListeners()
+            setupObservers()
+        } catch (e: Throwable) {
+            displayError(e.localizedMessage)
         }
     }
 
@@ -44,7 +54,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val snackbar = createSnackbar(binding.root, getString(R.string.no_internet))
+        val snackbar = createIndefiniteSnackbar(binding.root, getString(R.string.no_internet))
         handleNetworkWatcher(networkWatcher.isNetworkConnected(), snackbar)
         networkWatcher.observe(this) {
             handleNetworkWatcher(it, snackbar)
@@ -64,11 +74,45 @@ abstract class BaseActivity : AppCompatActivity() {
         networkWatcher.removeObservers(this)
     }
 
-    fun createSnackbar(view: View, message: String) =
+    fun displayError(message: String? = null) {
+        createSnackbar(binding.root, message ?: getString(R.string.generic_error))
+    }
+
+    private fun createSnackbar(view: View, message: String) =
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+
+    private fun createIndefiniteSnackbar(view: View, message: String) =
         Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE)
 
     private fun ((AlertDialog) -> DialogInterface.OnClickListener)?.notNull(): Boolean {
         return this != null
+    }
+
+    fun <T> navigateTo(destination: Class<T>, isFinishActivity: Boolean = false) {
+        if (destination.superclass.name == BaseActivity::class.java.name) {
+            Intent(this, destination).also {
+                startActivity(it)
+            }
+            if (isFinishActivity) finish()
+        } else {
+            throw IllegalArgumentException("Destination must be an Activity!")
+        }
+    }
+
+    fun showProgress() {
+        try {
+            findViewById<View>(R.id.layoutProgress).visibility = View.VISIBLE
+        } catch (e: Throwable) {
+            throw Throwable("Make sure to include progress layout in your activity!")
+        }
+    }
+
+    fun hideProgress() {
+        try {
+            findViewById<View>(R.id.layoutProgress).visibility = View.GONE
+        } catch (e: Throwable) {
+            throw Throwable("Make sure to include progress layout in your activity!")
+        }
     }
 
     sealed class AlertDialogButton {
@@ -76,4 +120,7 @@ abstract class BaseActivity : AppCompatActivity() {
         object NegativeButton : AlertDialogButton()
     }
 
+    abstract fun setupListeners()
+    abstract fun initViews()
+    abstract fun setupObservers()
 }
