@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DashboardItem">
+        <attr name="dashboardItem_background" format="reference" />
+        <attr name="dashboardItem_icon" format="reference" />
+        <attr name="dashboardItem_text" format="string" />
+        <attr name="dashboardItem_icon_translationX" format="dimension" />
+        <attr name="dashboardItem_icon_translationY" format="dimension" />
+        <attr name="dashboardItem_margin" format="dimension" />
+    </declare-styleable>
+</resources>

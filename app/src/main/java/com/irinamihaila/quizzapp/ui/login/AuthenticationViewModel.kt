@@ -28,7 +28,11 @@ class AuthenticationViewModel(val sharedPrefsUtils: SharedPrefsUtils) : ViewMode
                                 Exception("Credentials incorrect. Please re-check.")
                             )
                         )
-                    } else uiStateLiveData.postValue(AppResult.Success("Login successful."))
+                    } else uiStateLiveData.postValue(
+                        AppResult.Success(
+                            snapshot.child("fullName").getValue(String::class.java)
+                        )
+                    )
                 } else {
                     uiStateLiveData.postValue(AppResult.Error(Exception("Account does not exist.")))
                 }
@@ -45,10 +49,10 @@ class AuthenticationViewModel(val sharedPrefsUtils: SharedPrefsUtils) : ViewMode
         uiStateLiveData.value = AppResult.Progress
         createUserNode(quizUser)
         Firebase.database.getReference("users")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.hasChild(quizUser.username)) {
-                        uiStateLiveData.postValue(AppResult.Success(null))
+                        uiStateLiveData.postValue(AppResult.Success(quizUser.username))
                     }
                 }
 

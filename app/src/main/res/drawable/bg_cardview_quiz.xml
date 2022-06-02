@@ -12,6 +12,6 @@
         android:width="@dimen/dimen_130dp"
         android:height="@dimen/dimen_80dp"
         android:drawable="@drawable/shadow_quiz_cardview"
-        android:top="@dimen/dimen_60dp" android:left="-20dp">
+        android:top="@dimen/dimen_60dp" android:left="-30dp">
     </item>
 </layer-list>
