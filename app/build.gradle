@@ -61,5 +61,5 @@ dependencies {
     implementation platform("com.google.firebase:firebase-bom:$firebaseBoM_version")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-database-ktx")
-
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 }
