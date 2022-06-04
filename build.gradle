@@ -15,6 +15,7 @@ ext {
     okhttp_version = "4.9.3"
     gson_version = "2.9.0"
     firebaseBoM_version = "30.0.1"
+    lottieVersion = "3.4.0"
 }
 
 
