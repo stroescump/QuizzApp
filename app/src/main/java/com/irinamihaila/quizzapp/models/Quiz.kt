@@ -1,14 +1,19 @@
 package com.irinamihaila.quizzapp.models
 
-import com.google.gson.annotations.SerializedName
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Quiz(
-    @SerializedName("id")
-    val id: String? = null,
-    @SerializedName("questions")
-    val questions: List<Question>? = null
-)
+    var id: String? = "",
+    var name: String? = "",
+    var category: String? = "",
+    var issuedDate: String? = "",
+    var isRedo: Boolean? = false,
+    var questions: List<Question?>? = emptyList()
+) : Parcelable
 
+@Parcelize
 data class Question(
     val question: String? = "",
     val answer1: String? = "",
@@ -16,4 +21,4 @@ data class Question(
     val answer3: String? = "",
     val answer4: String? = "",
     val correctAnswer: String? = ""
-)
+) : Parcelable

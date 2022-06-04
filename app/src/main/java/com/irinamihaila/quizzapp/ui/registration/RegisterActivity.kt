@@ -54,13 +54,13 @@ class RegisterActivity : BaseActivity() {
                 AppResult.Progress -> {
                     showProgress()
                 }
-                is AppResult.Retry -> {}
                 is AppResult.Success -> {
                     hideProgress()
-                    appResult.successData?.let { username ->
-                        SharedPrefsUtils(this).saveUserId(
-                            username
-                        )
+                    appResult.successData?.let { pair ->
+                        SharedPrefsUtils(this).also {
+                            it.saveFullName(pair.first)
+                            it.saveUsername(pair.second)
+                        }
                     }
                     navigateTo(DashboardActivity::class.java, true)
                 }

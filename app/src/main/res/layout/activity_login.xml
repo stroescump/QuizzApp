@@ -36,6 +36,8 @@
         android:layout_marginBottom="@dimen/dimen_10dp"
         android:hint="@string/username"
         android:imeOptions="actionNext"
+        android:lines="1"
+        android:maxLines="1"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

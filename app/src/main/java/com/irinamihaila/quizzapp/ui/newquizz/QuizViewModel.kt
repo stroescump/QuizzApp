@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.models.QuizUser
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
+import com.irinamihaila.quizzapp.utils.getQuizNode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -44,24 +45,4 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
         }
     }
 }
-
-fun getUserNode(userId: String) = Firebase.database.getReference("users/$userId")
-fun getQuizNode(userId: String) = Firebase.database.getReference("users/$userId/quiz")
-fun getLastQuizNode(userId: String, handler: (key: String?) -> Unit) =
-    Firebase.database.getReference("users/$userId/quiz")
-        .get()
-        .addOnSuccessListener {
-            try {
-                if (it.children.count() > 0) {
-                    handler(it.children.last().ref.key)
-                } else {
-                    handler(null)
-                }
-            } catch (e: Throwable) {
-                handler(null)
-            }
-        }
-
-fun createUserNode(quizUser: QuizUser) =
-    Firebase.database.getReference("users/${quizUser.username}").setValue(quizUser)
 

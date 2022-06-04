@@ -6,9 +6,10 @@ import com.irinamihaila.quizzapp.R
 class SharedPrefsUtils(private val ctx: Context) {
     companion object {
         const val USER_KEY = "USER_KEY"
+        const val FULL_NAME_KEY = "FULL_NAME"
     }
 
-    fun getUserId() = run {
+    fun getUsername() = run {
         val prefs = ctx.getSharedPreferences(
             ctx.getString(R.string.preference_file_key),
             Context.MODE_PRIVATE
@@ -16,13 +17,32 @@ class SharedPrefsUtils(private val ctx: Context) {
         prefs.getString(USER_KEY, null)
     }
 
-    fun saveUserId(userId: String) = run {
+    fun saveUsername(username: String) = run {
         val prefs = ctx.getSharedPreferences(
             ctx.getString(R.string.preference_file_key),
             Context.MODE_PRIVATE
         )
         prefs.edit().apply {
-            putString(USER_KEY, userId)
+            putString(USER_KEY, username)
+            apply()
+        }
+    }
+
+    fun getFullName() = run {
+        val prefs = ctx.getSharedPreferences(
+            ctx.getString(R.string.preference_file_key),
+            Context.MODE_PRIVATE
+        )
+        prefs.getString(FULL_NAME_KEY, null)
+    }
+
+    fun saveFullName(fullName: String) = run {
+        val prefs = ctx.getSharedPreferences(
+            ctx.getString(R.string.preference_file_key),
+            Context.MODE_PRIVATE
+        )
+        prefs.edit().apply {
+            putString(FULL_NAME_KEY, fullName)
             apply()
         }
     }
