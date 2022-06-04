@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerProfile"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dimen_20dp"
+    android:background="@drawable/bg_profile_dashboard"
+    android:padding="@dimen/dimen_10dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintWidth_percent="0.35">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="@dimen/dimen_60dp"
+        android:layout_height="@dimen/dimen_60dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_profile_pic"
+        app:layout_constraintEnd_toStartOf="@id/tvFirstName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/circleImageView" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvFirstName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:fontFamily="@font/coolvetica_rg"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_16sp"
+        app:layout_constraintBottom_toBottomOf="@id/ivProfile"
+        app:layout_constraintStart_toEndOf="@id/ivProfile"
+        app:layout_constraintTop_toTopOf="@id/ivProfile"
+        tools:text="Irina" />
+
+    <!--        <androidx.appcompat.widget.AppCompatImageView-->
+    <!--            android:id="@+id/ivXP"-->
+    <!--            android:layout_width="@dimen/dimen_60dp"-->
+    <!--            android:layout_height="@dimen/dimen_60dp"-->
+    <!--            android:layout_marginEnd="@dimen/dimen_10dp"-->
+    <!--            app:layout_constraintBottom_toBottomOf="@id/ivProfile"-->
+    <!--            app:layout_constraintEnd_toStartOf="@id/tvXP"-->
+    <!--            app:layout_constraintTop_toTopOf="@id/ivProfile"-->
+    <!--            tools:src="@tools:sample/avatars" />-->
+
+    <!--        <androidx.appcompat.widget.AppCompatTextView-->
+    <!--            android:id="@+id/tvXP"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginStart="@dimen/dimen_10dp"-->
+    <!--            app:layout_constraintBottom_toBottomOf="@id/ivProfile"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="@id/ivProfile"-->
+    <!--            tools:text="200,000" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

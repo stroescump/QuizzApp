@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizzApp">
         <activity
+            android:name=".ui.newquizz.TakeQuizActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.registration.RegisterActivity"
             android:exported="false" />
         <activity
@@ -29,9 +32,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.newquizz.CreateQuizActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
-            android:name=".ui.newquizz.TakeQuizActivity"
+            android:name=".ui.newquizz.SeeAvailableQuizActivity"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"

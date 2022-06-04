@@ -14,5 +14,8 @@
     <color name="purple_dark1">#4f60eb</color>
     <color name="purple_dark2">#4A5AD9</color>
     <color name="purple_dark3">#3644B3</color>
+    <color name="purple_dark4">#1F2999</color>
     <color name="orange">#FF9940</color>
+    <color name="green">#4D994D</color>
+    <color name="red">#991F1F</color>
 </resources>

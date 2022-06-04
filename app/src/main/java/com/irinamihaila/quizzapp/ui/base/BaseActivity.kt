@@ -88,17 +88,6 @@ abstract class BaseActivity : AppCompatActivity() {
         return this != null
     }
 
-    fun <T> navigateTo(destination: Class<T>, isFinishActivity: Boolean = false) {
-        if (destination.superclass.name == BaseActivity::class.java.name) {
-            Intent(this, destination).also {
-                startActivity(it)
-            }
-            if (isFinishActivity) finish()
-        } else {
-            throw IllegalArgumentException("Destination must be an Activity!")
-        }
-    }
-
     fun showProgress() {
         try {
             findViewById<View>(R.id.layoutProgress).visibility = View.VISIBLE
@@ -112,6 +101,22 @@ abstract class BaseActivity : AppCompatActivity() {
             findViewById<View>(R.id.layoutProgress).visibility = View.GONE
         } catch (e: Throwable) {
             throw Throwable("Make sure to include progress layout in your activity!")
+        }
+    }
+
+    fun <T> navigateTo(
+        destination: Class<T>,
+        isFinishActivity: Boolean = false,
+        extras: Bundle? = null
+    ) {
+        if (destination.superclass.name == BaseActivity::class.java.name) {
+            Intent(this, destination).also {
+                extras?.let { safeExtras -> it.putExtra("data", safeExtras) }
+                startActivity(it)
+            }
+            if (isFinishActivity) finish()
+        } else {
+            throw IllegalArgumentException("Destination must be an Activity!")
         }
     }
 
