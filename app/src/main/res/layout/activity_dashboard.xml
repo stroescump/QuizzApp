@@ -67,8 +67,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
         android:layout_marginTop="@dimen/dimen_10dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/containerProfile">
 
@@ -81,14 +81,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05" />
+                app:layout_constraintGuide_percent="0.08" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelineEndDashboardItems"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95" />
+                app:layout_constraintGuide_percent="0.92" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelineTopDashboardItems"
@@ -118,9 +118,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_20dp"
                 android:layout_marginTop="@dimen/dimen_5dp"
-                android:fontFamily="@font/coolvetica_rg"
+                android:fontFamily="@font/geo_sans_light"
                 android:text="@string/choose_a_category_to_start_playing"
                 android:textColor="@color/white"
+                android:textSize="@dimen/dimen_16sp"
                 app:layout_constraintStart_toStartOf="@id/guidelineStartDashboardItems"
                 app:layout_constraintTop_toBottomOf="@id/tvTitleLetsPlay" />
 
@@ -167,7 +168,8 @@
                 app:dashboardItem_text="Art"
                 app:layout_constraintEnd_toEndOf="@id/dashboardItem2"
                 app:layout_constraintTop_toBottomOf="@id/containerProfile"
-                app:layout_constraintTop_toTopOf="@id/dashboardItem3" />
+                app:layout_constraintTop_toTopOf="@id/dashboardItem3"
+                tools:ignore="NotSibling" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

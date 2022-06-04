@@ -9,7 +9,7 @@ import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.DashboardItemBinding
 
 
-class DashboardItem(private val ctx: Context, private val attributeSet: AttributeSet?) :
+class DashboardItem(ctx: Context, attributeSet: AttributeSet?) :
     ConstraintLayout(ctx, attributeSet) {
     private lateinit var binding: DashboardItemBinding
 
