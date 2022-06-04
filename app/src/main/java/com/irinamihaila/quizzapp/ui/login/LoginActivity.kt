@@ -1,6 +1,5 @@
 package com.irinamihaila.quizzapp.ui.login
 
-import android.os.Bundle
 import com.irinamihaila.quizzapp.databinding.ActivityLoginBinding
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.DashboardActivity
@@ -27,6 +26,11 @@ class LoginActivity : BaseActivity() {
                 is AppResult.Success -> {
                     binding.also {
                         hideProgress()
+                        appResult.successData?.let { username ->
+                            SharedPrefsUtils(this).saveUserId(
+                                username
+                            )
+                        }
                         navigateTo(DashboardActivity::class.java, true)
                     }
                 }

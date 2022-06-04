@@ -16,23 +16,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.75">
+        app:layout_constraintWidth_percent="0.35">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivProfile"
             android:layout_width="@dimen/dimen_60dp"
             android:layout_height="@dimen/dimen_60dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_profile_pic"
             app:layout_constraintEnd_toStartOf="@id/tvFirstName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/circleImageView"
-            tools:src="@tools:sample/avatars" />
+            app:shapeAppearanceOverlay="@style/circleImageView" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvFirstName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_10dp"
+            android:fontFamily="@font/coolvetica_rg"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_16sp"
             app:layout_constraintBottom_toBottomOf="@id/ivProfile"
             app:layout_constraintStart_toEndOf="@id/ivProfile"
             app:layout_constraintTop_toTopOf="@id/ivProfile"
@@ -60,34 +64,113 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cvQuiz1"
-        android:layout_width="@dimen/dimen_130dp"
-        android:layout_height="@dimen/dimen_130dp"
-        android:layout_margin="@dimen/dimen_50dp"
-        android:background="@drawable/bg_cardview_quiz"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/containerProfile" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/ivQuizMath"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:src="@drawable/math"
-        android:translationX="-40dp"
-        android:translationY="-40dp"
-        app:layout_constraintBottom_toBottomOf="@id/cvQuiz1"
-        app:layout_constraintEnd_toEndOf="@id/cvQuiz1" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvQuizCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:textColor="@color/white"
-        android:textSize="@dimen/dimen_18sp"
-        app:layout_constraintEnd_toEndOf="@id/cvQuiz1"
-        app:layout_constraintStart_toStartOf="@id/cvQuiz1"
-        app:layout_constraintTop_toBottomOf="@id/cvQuiz1"
-        tools:text="Maths" />
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/containerProfile">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineStartDashboardItems"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.08" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineEndDashboardItems"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.92" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineTopDashboardItems"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.0" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvTitleLetsPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:fontFamily="@font/coolvetica_rg"
+                android:letterSpacing="0.02"
+                android:text="@string/let_s_play_some_games"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/guidelineStartDashboardItems"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvSubTitleLetsPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:fontFamily="@font/geo_sans_light"
+                android:text="@string/choose_a_category_to_start_playing"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_16sp"
+                app:layout_constraintStart_toStartOf="@id/guidelineStartDashboardItems"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleLetsPlay" />
+
+
+            <com.irinamihaila.quizzapp.customviews.DashboardItem
+                android:id="@+id/dashboardItem1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                app:dashboardItem_background="@drawable/bg_cardview_quiz"
+                app:dashboardItem_icon="@drawable/general_knowledge"
+                app:dashboardItem_text="General knowledge"
+                app:layout_constraintStart_toStartOf="@id/guidelineStartDashboardItems"
+                app:layout_constraintTop_toBottomOf="@id/tvSubTitleLetsPlay" />
+
+            <com.irinamihaila.quizzapp.customviews.DashboardItem
+                android:id="@+id/dashboardItem2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_40dp"
+                app:dashboardItem_background="@drawable/bg_cardview_quiz"
+                app:dashboardItem_icon="@drawable/foreign_languages"
+                app:dashboardItem_text="Foreign languages"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEndDashboardItems"
+                app:layout_constraintTop_toTopOf="@id/dashboardItem1" />
+
+            <com.irinamihaila.quizzapp.customviews.DashboardItem
+                android:id="@+id/dashboardItem3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                app:dashboardItem_background="@drawable/bg_cardview_quiz"
+                app:dashboardItem_icon="@drawable/math"
+                app:dashboardItem_text="Science"
+                app:layout_constraintStart_toStartOf="@id/guidelineStartDashboardItems"
+                app:layout_constraintTop_toBottomOf="@id/dashboardItem1" />
+
+            <com.irinamihaila.quizzapp.customviews.DashboardItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_40dp"
+                app:dashboardItem_background="@drawable/bg_cardview_quiz"
+                app:dashboardItem_icon="@drawable/art"
+                app:dashboardItem_text="Art"
+                app:layout_constraintEnd_toEndOf="@id/dashboardItem2"
+                app:layout_constraintTop_toBottomOf="@id/containerProfile"
+                app:layout_constraintTop_toTopOf="@id/dashboardItem3"
+                tools:ignore="NotSibling" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
