@@ -14,7 +14,8 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="generic_error">An error occured. Please try again.</string>
-    <string name="register">Register</string>
+    <string name="register">Don\'t have an account? Register now.</string>
+    <string name="register_btn">Register</string>
     <string name="player">Player</string>
     <string name="author">Author</string>
     <string name="full_name">Full Name</string>
