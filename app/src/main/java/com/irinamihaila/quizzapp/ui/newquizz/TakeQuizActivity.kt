@@ -94,12 +94,14 @@ class TakeQuizActivity : BaseActivity() {
         arrayOf(btnAnswer1, btnAnswer2, btnAnswer3, btnAnswer4).onEach {
             if (it.id != currentButton.id) {
                 if (it.text == correctAnswer) {
-                    viewModel.correctAnswers = viewModel.correctAnswers.inc()
                     colorRightAnswer(it)
                 } else {
                     colorWrongAnswer(it)
                 }
             } else {
+                if (it.text == correctAnswer) {
+                    viewModel.correctAnswers = viewModel.correctAnswers.inc()
+                }
                 colorSelectedAnswer(it)
             }
         }

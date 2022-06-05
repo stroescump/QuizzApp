@@ -40,14 +40,18 @@ class LeaderboardBottomSheetFragment : BottomSheetDialogFragment() {
         }
         with(binding) {
             rvLeaderboard.adapter = LeaderboardItemAdapter(mutableListOf())
-            val percentage = getPercentage()
-            tvPercentage.text = "$percentage%\nSee how your colleagues did"
+            val percentage =
+                getPercentage()
+            tvPercentage.text = "$percentage%\nSee how your \ncolleagues did"
         }
     }
 
     private fun setupObservers() {
         viewModel.leaderboardLiveData.observe(viewLifecycleOwner) { leaderboard ->
-            (binding.rvLeaderboard.adapter as LeaderboardItemAdapter).refreshList(leaderboard.sortedByDescending { it.second })
+            val updatedList = leaderboard.toMutableList().also {
+                it.add("You" to getPercentage())
+            }
+            (binding.rvLeaderboard.adapter as LeaderboardItemAdapter).refreshList(updatedList.sortedByDescending { it.second })
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
@@ -55,9 +59,11 @@ class LeaderboardBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun getPercentage() {
-        viewModel.quiz.questions?.size?.let { viewModel.correctAnswers.div(it) }
-    }
+    private fun getPercentage() =
+        viewModel.quiz.questions?.size?.let {
+            return@let viewModel.correctAnswers.toFloat().div(it.toFloat()).times(100f).toInt()
+        } ?: throw IllegalArgumentException("Percentage cannot be null.")
+
 
     private fun displayError(message: String? = null) {
         createSnackbar(binding.root, message ?: getString(R.string.generic_error))

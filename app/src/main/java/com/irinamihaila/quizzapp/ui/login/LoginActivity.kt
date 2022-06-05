@@ -1,6 +1,7 @@
 package com.irinamihaila.quizzapp.ui.login
 
 import android.graphics.Paint
+import android.text.Editable
 import com.irinamihaila.quizzapp.databinding.ActivityLoginBinding
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.DashboardActivity
@@ -49,9 +50,12 @@ class LoginActivity : BaseActivity() {
                 navigateTo(RegisterActivity::class.java)
             }
         }
+        binding.btnLogin.performClick()
     }
 
     override fun initViews() {
         binding.btnRegister.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        binding.etUsername.text = Editable.Factory().newEditable("a")
+        binding.etPassword.text = Editable.Factory().newEditable("aa")
     }
 }
