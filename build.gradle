@@ -17,6 +17,7 @@ ext {
     firebaseBoM_version = "30.0.1"
     lottieVersion = "4.2.1"
     coroutines_version = "1.6.1"
+    fragment_ktx = "1.4.1"
 }
 
 

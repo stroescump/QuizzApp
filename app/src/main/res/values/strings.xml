@@ -22,4 +22,7 @@
     <string name="let_s_play_some_games">Let\'s Play</string>
     <string name="choose_a_category_to_start_playing">Choose a category to start playing</string>
     <string name="submit">Submit</string>
+    <string name="quizFinished">Congrats! Here\'s how you did</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

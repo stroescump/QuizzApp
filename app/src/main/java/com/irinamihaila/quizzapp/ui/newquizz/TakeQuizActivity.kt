@@ -2,12 +2,14 @@ package com.irinamihaila.quizzapp.ui.newquizz
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.lifecycleScope
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.ActivityTakeQuizBinding
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
+import com.irinamihaila.quizzapp.ui.leaderboard.LeaderboardBottomSheetFragment
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding
 import kotlinx.coroutines.flow.update
@@ -15,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class TakeQuizActivity : BaseActivity() {
     override val binding by viewBinding(ActivityTakeQuizBinding::inflate)
-    private val viewModel by lazy { TakeQuizViewModel() }
+    private val viewModel by viewModels<TakeQuizViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         intent.getBundleExtra("data")?.getParcelable<Quiz>("quiz")?.let { quiz ->
@@ -34,14 +36,23 @@ class TakeQuizActivity : BaseActivity() {
                 }
             }
             btnSubmitAnswer.setOnClickListener {
-                lifecycleScope.launch { viewModel.currentQuestion.update { it.inc() } }
+                lifecycleScope.launch {
+                    val quizFinishedString = getString(R.string.quizFinished)
+                    if (isQuizFinished() && isDisplayLeaderboardNeeded(quizFinishedString).not()) {
+                        btnSubmitAnswer.text = quizFinishedString
+                    } else if (isDisplayLeaderboardNeeded(quizFinishedString)) {
+                        displayLeaderboard()
+                    } else {
+                        viewModel.currentQuestion.update { it.inc() }
+                    }
+                }
             }
         }
     }
 
     override fun initViews() {
         binding.containerProfile.tvFirstName.text = SharedPrefsUtils(this).getFullName()
-        if (viewModel.quiz.questions?.size!! > viewModel.currentQuestion.value) {
+        if (quizQuestionSize() > viewModel.currentQuestion.value) {
             prepareNextQuestion(viewModel.currentQuestion.value)
         }
     }
@@ -49,7 +60,7 @@ class TakeQuizActivity : BaseActivity() {
     override fun setupObservers() {
         lifecycleScope.launch {
             viewModel.currentQuestion.collect { newPos ->
-                if (viewModel.quiz.questions?.size!! > newPos) {
+                if (quizQuestionSize() > newPos) {
                     prepareNextQuestion(newPos)
                 }
             }
@@ -83,6 +94,7 @@ class TakeQuizActivity : BaseActivity() {
         arrayOf(btnAnswer1, btnAnswer2, btnAnswer3, btnAnswer4).onEach {
             if (it.id != currentButton.id) {
                 if (it.text == correctAnswer) {
+                    viewModel.correctAnswers = viewModel.correctAnswers.inc()
                     colorRightAnswer(it)
                 } else {
                     colorWrongAnswer(it)
@@ -119,4 +131,18 @@ class TakeQuizActivity : BaseActivity() {
 
     private fun getCorrectAnswer() =
         viewModel.quiz.questions?.get(viewModel.currentQuestion.value)?.correctAnswer
+
+    private fun quizQuestionSize() = viewModel.quiz.questions?.size!!
+
+    private fun displayLeaderboard() {
+        LeaderboardBottomSheetFragment.newInstance()
+            .show(supportFragmentManager, LeaderboardBottomSheetFragment::class.java.simpleName)
+    }
+
+    private fun ActivityTakeQuizBinding.isDisplayLeaderboardNeeded(
+        quizFinishedString: String
+    ) = btnSubmitAnswer.text == quizFinishedString
+
+    private fun isQuizFinished() =
+        viewModel.currentQuestion.value.inc() == quizQuestionSize()
 }

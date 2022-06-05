@@ -9,6 +9,48 @@ import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.models.QuizUser
 
 fun getUserNode(username: String) = Firebase.database.getReference("users/$username")
+
+fun getLeaderboardFirebase(
+    quizId: String,
+    handler: (leaderboard: AppResult<List<Pair<String, Int>>>) -> Unit
+) =
+    Firebase.database.getReference("users").addValueEventListener(object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            if (snapshot.exists() && snapshot.hasChildren()) {
+                val leaderboard = mutableListOf<Pair<String, Int>>()
+                snapshot.children.onEach { user ->
+                    val fullName = getFullname(user)
+                    if (isSubscribedToQuiz(user)) {
+                        val quiz = user.child("availableQuizzes").child(quizId)
+                        val percentage = getPercentage(quiz)
+                        percentage?.let { leaderboard.add(fullName to it) }
+                    }
+                }
+                if (leaderboard.isNotEmpty()) {
+                    handler(AppResult.Success(leaderboard))
+                } else {
+                    handler(AppResult.Error(Throwable("No user is subscribed to this quiz.")))
+                }
+            }
+        }
+
+        private fun isSubscribedToQuiz(user: DataSnapshot) =
+            user.hasChild("availableQuizzes") && user.child("availableQuizzes").hasChild(quizId)
+
+        private fun getPercentage(quiz: DataSnapshot) =
+            if (quiz.hasChild("percentage")) {
+                quiz.child("percentage").getValue(Int::class.java)
+            } else null
+
+        private fun getFullname(user: DataSnapshot) =
+            (user.child("fullName").getValue(String::class.java)
+                ?: throw IllegalArgumentException("User must have fullName."))
+
+        override fun onCancelled(error: DatabaseError) {
+            handler(AppResult.Error(error.toException()))
+        }
+    })
+
 fun getQuizNode(username: String) = Firebase.database.getReference("users/$username/quiz")
 fun getLastQuizNode(username: String, handler: (key: String?) -> Unit) =
     Firebase.database.getReference("users/$username/quiz")
@@ -77,8 +119,7 @@ fun getAvailableQuizzes(
                 if (snapshot.hasChildren()) {
                     val availableQuizList = mutableListOf<String>()
                     snapshot.children.forEach {
-                        it.getValue(String::class.java)
-                            ?.let { value -> availableQuizList.add(value) }
+                        it.key?.let { value -> availableQuizList.add(value) }
                     }
                     handler(AppResult.Success(availableQuizList))
                 }

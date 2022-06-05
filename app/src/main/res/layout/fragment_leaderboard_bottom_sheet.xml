@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.leaderboard.LeaderboardBottomSheetFragment">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvYouDid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:fontFamily="@font/coolvetica_rg"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_40sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="You did" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvPercentage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/coolvetica_rg"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_40sp"
+        app:layout_constraintTop_toBottomOf="@id/tvYouDid"
+        tools:text="86%\nHere\'s how your colleagues did" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvLeaderboard"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPercentage"
+        tools:itemCount="21"
+        tools:listitem="@layout/item_leaderboard" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
