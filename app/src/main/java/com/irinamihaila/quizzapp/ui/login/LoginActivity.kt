@@ -46,13 +46,12 @@ class LoginActivity : BaseActivity() {
             }
 
             btnRegister.setOnClickListener {
-                btnRegister.paintFlags = Paint.UNDERLINE_TEXT_FLAG
                 navigateTo(RegisterActivity::class.java)
             }
         }
     }
 
     override fun initViews() {
-
+        binding.btnRegister.paintFlags = Paint.UNDERLINE_TEXT_FLAG
     }
 }
