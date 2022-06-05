@@ -36,10 +36,12 @@ class QuizAvailableAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("SetTextI18n")
         fun bind(quiz: Quiz) {
             with(binding) {
                 root.setOnClickListener { onQuizClickListener(quiz) }
                 tvQuizAvailableTitle.text = quiz.name
+                quiz.percentage?.let { tvQuizPercentage.text = "$it%" }
                 tvQuizAvailableIsRedoEnabled.text = "Redo available: ${quiz.isRedo}"
             }
         }

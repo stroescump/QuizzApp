@@ -19,10 +19,6 @@ class LeaderboardBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentLeaderboardBottomSheetBinding
     private val viewModel: TakeQuizViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

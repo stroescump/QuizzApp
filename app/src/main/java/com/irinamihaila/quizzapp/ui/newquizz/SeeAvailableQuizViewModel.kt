@@ -9,22 +9,18 @@ import com.irinamihaila.quizzapp.utils.AppResult
 import com.irinamihaila.quizzapp.utils.getAvailableQuizzes
 import com.irinamihaila.quizzapp.utils.getQuiz
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SeeAvailableQuizViewModel(
 
 ) : ViewModel() {
     lateinit var quizCategory: QuizCategory
-    val availableQuizzesLiveData: MutableLiveData<AppResult<Quiz>> = MutableLiveData()
     val errorLiveData: MutableLiveData<Throwable> = MutableLiveData()
-
-    fun getQuizQuestions() = flow<AppResult<Quiz>> {
-        emit(AppResult.Progress)
-    }
+    val quizzesFlow = MutableStateFlow<AppResult<Quiz>>(AppResult.Progress)
 
     fun getQuizzesForUser(username: String) = run {
-        availableQuizzesLiveData.postValue(AppResult.Progress)
         viewModelScope.launch(Dispatchers.IO) {
             getAvailableQuizzes(username) {
                 when (it) {
@@ -33,9 +29,8 @@ class SeeAvailableQuizViewModel(
                     }
                     AppResult.Progress -> {}
                     is AppResult.Success -> {
-                        it.successData?.onEach { quizId ->
-//                            val quizList = mutableListOf<Quiz>()
-                            getQuiz(quizId, quizCategory.name) { quizResult ->
+                        it.successData?.onEach { quizDetails ->
+                            getQuiz(quizDetails.first, quizCategory.name) { quizResult ->
                                 when (quizResult) {
                                     is AppResult.Error -> {
                                         errorLiveData.postValue(quizResult.exception)
@@ -43,15 +38,11 @@ class SeeAvailableQuizViewModel(
                                     AppResult.Progress -> {}
                                     is AppResult.Success -> {
                                         quizResult.successData?.also { quiz ->
-                                            availableQuizzesLiveData.postValue(
+                                            quizzesFlow.update {
                                                 AppResult.Success(
-                                                    quiz
+                                                    quiz.apply { percentage = quizDetails.second }
                                                 )
-                                            )
-//                                            quiz.takeIf { quizFilter -> quizFilter.category == quizCategory.name }
-//                                                ?.let { quizToBeAdded ->
-//                                                    quizList.add(quizToBeAdded)
-//                                                }
+                                            }
                                         }
                                     }
                                 }

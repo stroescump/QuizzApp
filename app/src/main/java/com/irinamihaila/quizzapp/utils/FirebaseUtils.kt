@@ -52,20 +52,6 @@ fun getLeaderboardFirebase(
     })
 
 fun getQuizNode(username: String) = Firebase.database.getReference("users/$username/quiz")
-fun getLastQuizNode(username: String, handler: (key: String?) -> Unit) =
-    Firebase.database.getReference("users/$username/quiz")
-        .get()
-        .addOnSuccessListener {
-            try {
-                if (it.children.count() > 0) {
-                    handler(it.children.last().ref.key)
-                } else {
-                    handler(null)
-                }
-            } catch (e: Throwable) {
-                handler(null)
-            }
-        }
 
 fun createUserNode(quizUser: QuizUser) =
     Firebase.database.getReference("users/${quizUser.username}").setValue(quizUser)
@@ -111,15 +97,22 @@ private fun matchById(it: DataSnapshot, id: String) =
 
 fun getAvailableQuizzes(
     username: String,
-    handler: (quiz: AppResult<List<String>>) -> Unit
+    handler: (quiz: AppResult<List<Pair<String, Int?>>>) -> Unit
 ) =
     getUserNode(username).child("availableQuizzes")
         .addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.hasChildren()) {
-                    val availableQuizList = mutableListOf<String>()
+                    val availableQuizList = mutableListOf<Pair<String, Int?>>()
                     snapshot.children.forEach {
-                        it.key?.let { value -> availableQuizList.add(value) }
+                        it.key?.let { quizName ->
+                            if (it.hasChild("percentage")) {
+                                val percentage = it.child("percentage").getValue(Int::class.java)
+                                availableQuizList.add(quizName to percentage)
+                            } else {
+                                availableQuizList.add(quizName to null)
+                            }
+                        }
                     }
                     handler(AppResult.Success(availableQuizList))
                 }

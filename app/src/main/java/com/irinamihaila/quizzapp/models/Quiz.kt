@@ -9,6 +9,7 @@ data class Quiz(
     var name: String? = "",
     var category: String? = "",
     var issuedDate: String? = "",
+    var percentage: Int? = null,
     var isRedo: Boolean? = false,
     var questions: List<Question?>? = emptyList()
 ) : Parcelable

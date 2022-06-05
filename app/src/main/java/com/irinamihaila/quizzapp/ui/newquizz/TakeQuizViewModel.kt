@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.utils.AppResult
 import com.irinamihaila.quizzapp.utils.getLeaderboardFirebase
+import com.irinamihaila.quizzapp.utils.getUserNode
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class TakeQuizViewModel : ViewModel() {
@@ -29,5 +30,11 @@ class TakeQuizViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun sendResults(username: String, quizId: String) {
+        getUserNode(username).child("availableQuizzes").child(quizId).child("percentage")
+            .setValue(quiz.questions?.size?.toFloat()
+                ?.let { correctAnswers.toFloat().div(it).times(100f).toInt() })
     }
 }

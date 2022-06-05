@@ -9,6 +9,7 @@ import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.ActivityTakeQuizBinding
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
+import com.irinamihaila.quizzapp.ui.dashboard.DashboardActivity
 import com.irinamihaila.quizzapp.ui.leaderboard.LeaderboardBottomSheetFragment
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding
@@ -26,6 +27,10 @@ class TakeQuizActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
     }
 
+    override fun onBackPressed() {
+        navigateTo(DashboardActivity::class.java, true)
+    }
+
     override fun setupListeners() {
         with(binding) {
             arrayOf(btnAnswer1, btnAnswer2, btnAnswer3, btnAnswer4).onEach { button ->
@@ -40,6 +45,7 @@ class TakeQuizActivity : BaseActivity() {
                     val quizFinishedString = getString(R.string.quizFinished)
                     if (isQuizFinished() && isDisplayLeaderboardNeeded(quizFinishedString).not()) {
                         btnSubmitAnswer.text = quizFinishedString
+                        sendResults()
                     } else if (isDisplayLeaderboardNeeded(quizFinishedString)) {
                         displayLeaderboard()
                     } else {
@@ -147,4 +153,18 @@ class TakeQuizActivity : BaseActivity() {
 
     private fun isQuizFinished() =
         viewModel.currentQuestion.value.inc() == quizQuestionSize()
+
+    private fun sendResults() {
+        SharedPrefsUtils(this@TakeQuizActivity).also {
+            it.getUsername()
+                ?.let { username ->
+                    viewModel.quiz.id?.let { quizId ->
+                        viewModel.sendResults(
+                            username,
+                            quizId
+                        )
+                    }
+                }
+        }
+    }
 }
