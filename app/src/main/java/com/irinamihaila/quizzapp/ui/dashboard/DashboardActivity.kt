@@ -35,12 +35,17 @@ class DashboardActivity : BaseActivity() {
             dashboardItem4.setOnClickListener {
                 provideQuizClickListener(QuizArt)
             }
+
+            dashboardItem5.setOnClickListener {
+                provideQuizClickListener(QuizOther)
+            }
         }
     }
 
     override fun initViews() {
         with(binding) {
-            containerProfile.tvFirstName.text = SharedPrefsUtils(this@DashboardActivity).getFullName()
+            containerProfile.tvFirstName.text =
+                SharedPrefsUtils(this@DashboardActivity).getFullName()
         }
     }
 
@@ -62,4 +67,5 @@ sealed class QuizCategory(val name: String) : Parcelable {
     object QuizScience : QuizCategory("SCIENCE")
     object QuizArt : QuizCategory("ART")
     object QuizForeignLanguages : QuizCategory("FOREIGN_LANGUAGES")
+    object QuizOther : QuizCategory("OTHER")
 }
