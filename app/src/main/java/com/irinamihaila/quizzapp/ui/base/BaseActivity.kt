@@ -5,8 +5,6 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
@@ -77,6 +75,9 @@ abstract class BaseActivity : AppCompatActivity() {
     fun displayError(message: String? = null) {
         createSnackbar(binding.root, message ?: getString(R.string.generic_error))
     }
+
+    fun displayInfo(message: String) =
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
 
     private fun createSnackbar(view: View, message: String) =
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()

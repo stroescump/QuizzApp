@@ -51,7 +51,11 @@ fun getLeaderboardFirebase(
         }
     })
 
-fun getQuizNode(username: String) = Firebase.database.getReference("users/$username/quiz")
+fun getQuizzesFromUsername(username: String) =
+    Firebase.database.getReference("users/$username/quizzesCreated")
+
+fun getQuizFromDB(quizId: String) =
+    Firebase.database.getReference("quizzes/$quizId")
 
 fun createUserNode(quizUser: QuizUser) =
     Firebase.database.getReference("users/${quizUser.username}").setValue(quizUser)
@@ -122,3 +126,5 @@ fun getAvailableQuizzes(
                 handler(AppResult.Error(error.toException()))
             }
         })
+
+fun createNewQuiz() = Firebase.database.reference.child("quizzes").push()

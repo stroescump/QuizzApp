@@ -19,11 +19,13 @@
     <string name="player">Player</string>
     <string name="author">Author</string>
     <string name="full_name">Full Name</string>
-    <string name="let_s_play_some_games">Let\'s Play</string>
-    <string name="choose_a_category_to_start_playing">Choose a category to start playing</string>
+    <string name="dashboardTitlePlayer">Let\'s Play</string>
+    <string name="dashboardPlayerSubtitle">Choose a category to start playing</string>
     <string name="submit">Submit</string>
     <string name="quizFinished">Congrats! Here\'s how you did</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="error_take_quiz_once">Sorry. You can only take part in this quiz once.</string>
+    <string name="dashboardTitleAuthor">What challenges will you bring today?</string>
+    <string name="dashboardAuthorSubtitle">Let\'s get started</string>
 </resources>

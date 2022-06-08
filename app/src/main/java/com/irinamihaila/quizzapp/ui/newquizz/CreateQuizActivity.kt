@@ -1,10 +1,13 @@
 package com.irinamihaila.quizzapp.ui.newquizz
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import com.irinamihaila.quizzapp.databinding.ActivityCreateQuizBinding
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
+import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding
+import kotlinx.coroutines.flow.collectLatest
 
 class CreateQuizActivity : BaseActivity() {
     override val binding by viewBinding(ActivityCreateQuizBinding::inflate)
@@ -14,13 +17,22 @@ class CreateQuizActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         initViews()
         setupListeners()
-        viewModel.createQuiz()
+        val quizCategory =
+            intent.extras?.getBundle("data")?.getParcelable<QuizCategory>("quizCategory")
+        viewModel.createQuiz(
+            quizCategory ?: throw IllegalStateException("Must have a valid quiz category")
+        )
     }
 
     override fun setupListeners() {
         binding.btnAddMore.setOnClickListener {
-            CreateQuizBottomSheetFragment.newInstance()
-                .show(supportFragmentManager, CreateQuizBottomSheetFragment::class.java.simpleName)
+            viewModel.currentQuizId.value?.let {
+                CreateQuizBottomSheetFragment.newInstance(it)
+                    .show(
+                        supportFragmentManager,
+                        CreateQuizBottomSheetFragment::class.java.simpleName
+                    )
+            }
         }
     }
 
@@ -29,6 +41,15 @@ class CreateQuizActivity : BaseActivity() {
     }
 
     override fun setupObservers() {
-
+        lifecycleScope.launchWhenResumed {
+            viewModel.uiState.collectLatest { res ->
+                res?.let {
+                    when (it.first) {
+                        true -> displayInfo("Success.")
+                        false -> displayError(it.second)
+                    }
+                }
+            }
+        }
     }
 }

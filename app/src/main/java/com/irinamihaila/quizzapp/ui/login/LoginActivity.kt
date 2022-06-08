@@ -27,10 +27,11 @@ class LoginActivity : BaseActivity() {
                 is AppResult.Success -> {
                     binding.also {
                         hideProgress()
-                        appResult.successData?.let { pair ->
+                        appResult.successData?.let { triple ->
                             SharedPrefsUtils(this).also {
-                                it.saveFullName(pair.first)
-                                it.saveUsername(pair.second)
+                                it.saveFullName(triple.first)
+                                it.saveUsername(triple.second)
+                                it.saveUserType(triple.third)
                             }
                         }
                         navigateTo(DashboardActivity::class.java, true)
@@ -55,7 +56,7 @@ class LoginActivity : BaseActivity() {
 
     override fun initViews() {
         binding.btnRegister.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-        binding.etUsername.text = Editable.Factory().newEditable("a")
-        binding.etPassword.text = Editable.Factory().newEditable("aa")
+        binding.etUsername.text = Editable.Factory().newEditable("irinam")
+        binding.etPassword.text = Editable.Factory().newEditable("a")
     }
 }

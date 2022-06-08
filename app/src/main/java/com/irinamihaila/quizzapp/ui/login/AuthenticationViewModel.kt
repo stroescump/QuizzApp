@@ -14,7 +14,7 @@ import com.irinamihaila.quizzapp.utils.createUserNode
 import com.irinamihaila.quizzapp.utils.getUserNode
 
 class AuthenticationViewModel(val sharedPrefsUtils: SharedPrefsUtils) : ViewModel() {
-    val uiStateLiveData = MutableLiveData<AppResult<Pair<String, String>>>()
+    val uiStateLiveData = MutableLiveData<AppResult<Triple<String, String, String>>>()
 
     fun login(username: String, password: String) = run {
         uiStateLiveData.value = AppResult.Progress
@@ -30,7 +30,11 @@ class AuthenticationViewModel(val sharedPrefsUtils: SharedPrefsUtils) : ViewMode
                         )
                     } else uiStateLiveData.postValue(
                         AppResult.Success(
-                            snapshot.child("fullName").getValue(String::class.java)!! to username
+                            Triple(
+                                snapshot.child("fullName").getValue(String::class.java)!!,
+                                username,
+                                snapshot.child("userType").getValue(String::class.java)!!,
+                            )
                         )
                     )
                 } else {
@@ -52,7 +56,15 @@ class AuthenticationViewModel(val sharedPrefsUtils: SharedPrefsUtils) : ViewMode
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.hasChild(quizUser.username)) {
-                        uiStateLiveData.postValue(AppResult.Success(quizUser.fullName to quizUser.username))
+                        uiStateLiveData.postValue(
+                            AppResult.Success(
+                                Triple(
+                                    quizUser.fullName,
+                                    quizUser.username,
+                                    quizUser.userType
+                                )
+                            )
+                        )
                     }
                 }
 

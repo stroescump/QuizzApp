@@ -11,7 +11,6 @@ import com.irinamihaila.quizzapp.databinding.FragmentCreateQuizBottomSheetBindin
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.value
-import kotlin.random.Random
 
 
 class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
@@ -19,6 +18,9 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: FragmentCreateQuizBottomSheetBinding? = null
     private val binding get() = _binding!!
     private val viewModel by lazy { QuizViewModel(SharedPrefsUtils(requireContext())) }
+    private val quizId by lazy {
+        arguments?.getString("quizId") ?: throw IllegalStateException("Must have a valid quiz id.")
+    }
 
     override fun getTheme(): Int {
         return R.style.CustomBottomSheetDialog
@@ -45,18 +47,17 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
                     correctAnswer = correctAnswer
                 )
                 getAdapter().addItem(newQuestion)
-                viewModel.uploadQuestion(newQuestion, Random.nextInt().toString())
+                viewModel.uploadQuestion(newQuestion, quizId)
                 dismiss()
             }
         }
     }
 
     companion object {
-        // TODO: Customize parameters
-        fun newInstance(): CreateQuizBottomSheetFragment =
+        fun newInstance(quizId: String): CreateQuizBottomSheetFragment =
             CreateQuizBottomSheetFragment().apply {
                 arguments = Bundle().apply {
-
+                    putString("quizId", quizId)
                 }
             }
     }

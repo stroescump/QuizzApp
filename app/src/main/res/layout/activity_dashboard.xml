@@ -44,14 +44,14 @@
                 app:layout_constraintGuide_percent="0.0" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvTitleLetsPlay"
+                android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_20dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:fontFamily="@font/coolvetica_rg"
                 android:letterSpacing="0.02"
-                android:text="@string/let_s_play_some_games"
+                android:text="@string/dashboardTitlePlayer"
                 android:textColor="@color/white"
                 android:textSize="32sp"
                 android:textStyle="bold"
@@ -59,17 +59,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvSubTitleLetsPlay"
+                android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_20dp"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:fontFamily="@font/geo_sans_light"
-                android:text="@string/choose_a_category_to_start_playing"
+                android:text="@string/dashboardPlayerSubtitle"
                 android:textColor="@color/white"
                 android:textSize="@dimen/dimen_16sp"
                 app:layout_constraintStart_toStartOf="@id/guidelineStartDashboardItems"
-                app:layout_constraintTop_toBottomOf="@id/tvTitleLetsPlay" />
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
 
             <com.irinamihaila.quizzapp.customviews.DashboardItem
@@ -81,7 +81,7 @@
                 app:dashboardItem_icon="@drawable/general_knowledge"
                 app:dashboardItem_text="General knowledge"
                 app:layout_constraintStart_toStartOf="@id/guidelineStartDashboardItems"
-                app:layout_constraintTop_toBottomOf="@id/tvSubTitleLetsPlay" />
+                app:layout_constraintTop_toBottomOf="@id/tvSubtitle" />
 
             <com.irinamihaila.quizzapp.customviews.DashboardItem
                 android:id="@+id/dashboardItem2"
