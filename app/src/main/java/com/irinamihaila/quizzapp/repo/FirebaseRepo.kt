@@ -7,6 +7,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.models.QuizUser
+import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.AppResult
 
 fun getUserNode(username: String) = Firebase.database.getReference("users/$username")
@@ -53,7 +54,7 @@ fun getLeaderboardFirebase(
     })
 
 fun getQuizzesFromUsername(username: String) =
-    Firebase.database.getReference("users/$username/quizzesCreated")
+    Firebase.database.getReference("users/$username/availableQuizzes")
 
 fun getQuizFromDB(quizId: String) =
     Firebase.database.getReference("quizzes/$quizId")
@@ -61,23 +62,22 @@ fun getQuizFromDB(quizId: String) =
 fun createUserNode(quizUser: QuizUser) =
     Firebase.database.getReference("users/${quizUser.username}").setValue(quizUser)
 
-fun getQuiz(id: String, category: String, handler: (quiz: AppResult<Quiz>) -> Unit) =
+fun getQuizzes(id: String, category: String, handler: (quiz: AppResult<List<Quiz>>) -> Unit) =
     Firebase.database.getReference("quizzes").get().addOnSuccessListener { snapshot ->
         fun throwNoElementException() {
             handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
         }
-
         try {
             if (snapshot.hasChildren()) {
-                snapshot.children.filter {
-                    matchById(it, id) && matchByCategory(it, category)
-                }.also { quiz ->
-                    if (quiz.isNotEmpty()) {
-                        handler(AppResult.Success(quiz.first().getValue(Quiz::class.java)))
-                    } else {
-                        throwNoElementException()
-                    }
+                AppResult.Success(snapshot.children.filter {
+                    matchById(
+                        it,
+                        id
+                    ) && matchByCategory(it, category)
                 }
+                    .map { quiz ->
+                        quiz.getValue(Quiz::class.java)
+                    })
             } else {
                 throwNoElementException()
             }
@@ -127,5 +127,32 @@ fun getAvailableQuizzes(
                 handler(AppResult.Error(error.toException()))
             }
         })
+
+fun getQuizzesCreated(
+    username: String,
+    quizCategory: QuizCategory,
+    handler: (quiz: AppResult<List<Quiz>>) -> Unit
+) = run {
+    getUserNode(username).child("availableQuizzes")
+        .addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.hasChildren()) {
+                    snapshot.children.onEach { quizId ->
+                        quizId.key?.let {
+                            getQuizzes(it, quizCategory.name) { quizList ->
+                                handler(quizList)
+                            }
+                        }
+                            ?: throw IllegalArgumentException("Node cannot lack a key. ${snapshot.ref}")
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                handler(AppResult.Error(error.toException()))
+            }
+
+        })
+}
 
 fun createNewQuiz() = Firebase.database.reference.child("quizzes").push()

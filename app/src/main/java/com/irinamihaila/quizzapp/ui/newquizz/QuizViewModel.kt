@@ -5,13 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.GenericTypeIndicator
 import com.irinamihaila.quizzapp.models.Question
-import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
-import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
+import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.repo.createNewQuiz
 import com.irinamihaila.quizzapp.repo.getQuizFromDB
+import com.irinamihaila.quizzapp.repo.getQuizzesCreated
 import com.irinamihaila.quizzapp.repo.getQuizzesFromUsername
+import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
+import com.irinamihaila.quizzapp.utils.AppResult
+import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -19,8 +24,10 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
 
     val uiState = MutableStateFlow<Pair<Boolean, String?>?>(null)
     val currentQuizId = MutableStateFlow<String?>(null)
+    val quizzesCreated = emptyFlow<AppResult<List<Quiz>>>()
 
     fun uploadQuestion(question: Question, quizId: String) {
+
         viewModelScope.launch(Dispatchers.IO) {
             val quiz = sharedPrefs.getUsername()?.let { getQuizFromDB(quizId) }
             quiz?.get()?.addOnSuccessListener {
@@ -44,7 +51,6 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
 
     fun createQuiz(quizCategory: QuizCategory) {
         viewModelScope.launch {
-
             val quizDB = createNewQuiz().apply {
                 child("category").setValue(quizCategory.name)
             }
@@ -62,11 +68,21 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
         }
     }
 
-    private fun addNewQuiz(
-        it: DataSnapshot,
-        path: String
-    ) {
-        it.ref.child(path).setValue("")
-    }
+    fun getCreatedQuizzes(quizCategory: QuizCategory) =
+        sharedPrefs.getUsername()?.let {
+            getQuizzesCreated(it, quizCategory) { res ->
+                quizzesCreated.onEmpty {
+                    emit(res)
+                }
+            }
+        }
 }
+
+private fun addNewQuiz(
+    it: DataSnapshot,
+    path: String
+) {
+    it.ref.child(path).setValue("")
+}
+
 

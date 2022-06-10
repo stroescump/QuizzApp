@@ -54,7 +54,6 @@ class QuizAvailableAdapter(
         notifyDataSetChanged()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun addToList(availableQuiz: Quiz) {
         quizList.add(availableQuiz)
         notifyItemInserted(quizList.size)
