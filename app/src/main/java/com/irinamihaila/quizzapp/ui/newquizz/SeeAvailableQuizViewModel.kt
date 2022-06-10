@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.repo.getAvailableQuizzes
-import com.irinamihaila.quizzapp.repo.getQuizzes
+import com.irinamihaila.quizzapp.repo.getQuizDetails
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.AppResult
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ class SeeAvailableQuizViewModel(
 ) : ViewModel() {
     lateinit var quizCategory: QuizCategory
     val errorLiveData: MutableLiveData<Throwable> = MutableLiveData()
-    val quizzesFlow = MutableStateFlow<AppResult<List<Quiz>>>(AppResult.Progress)
+    val quizzesFlow = MutableStateFlow<AppResult<Quiz>>(AppResult.Progress)
 
     fun getQuizzesForUser(username: String) = run {
         viewModelScope.launch(Dispatchers.IO) {
@@ -32,7 +32,7 @@ class SeeAvailableQuizViewModel(
                     }
                     is AppResult.Success -> {
                         it.successData?.onEach { quizDetails ->
-                            getQuizzes(quizDetails.first, quizCategory.name) { quizResult ->
+                            getQuizDetails(quizDetails.first, quizCategory.name) { quizResult ->
                                 when (quizResult) {
                                     is AppResult.Error -> {
                                         errorLiveData.postValue(quizResult.exception)
@@ -44,11 +44,7 @@ class SeeAvailableQuizViewModel(
                                         quizResult.successData?.also { quiz ->
                                             quizzesFlow.update {
                                                 AppResult.Success(
-                                                    quiz.map { quizMap ->
-                                                        quizMap.apply {
-                                                            percentage = quizDetails.second
-                                                        }
-                                                    }
+                                                    quiz.apply { percentage = quizDetails.second }
                                                 )
                                             }
                                         }

@@ -56,7 +56,7 @@ class LoginActivity : BaseActivity() {
 
     override fun initViews() {
         binding.btnRegister.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-        binding.etUsername.text = Editable.Factory().newEditable("irinam")
-        binding.etPassword.text = Editable.Factory().newEditable("a")
+        binding.etUsername.text = Editable.Factory().newEditable("a")
+        binding.etPassword.text = Editable.Factory().newEditable("aa")
     }
 }

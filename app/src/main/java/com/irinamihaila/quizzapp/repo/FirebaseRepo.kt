@@ -62,22 +62,44 @@ fun getQuizFromDB(quizId: String) =
 fun createUserNode(quizUser: QuizUser) =
     Firebase.database.getReference("users/${quizUser.username}").setValue(quizUser)
 
-fun getQuizzes(id: String, category: String, handler: (quiz: AppResult<List<Quiz>>) -> Unit) =
+fun getQuizDetails(id: String, category: String, handler: (quiz: AppResult<Quiz>) -> Unit) =
     Firebase.database.getReference("quizzes").get().addOnSuccessListener { snapshot ->
         fun throwNoElementException() {
             handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
         }
         try {
             if (snapshot.hasChildren()) {
-                AppResult.Success(snapshot.children.filter {
-                    matchById(
-                        it,
-                        id
-                    ) && matchByCategory(it, category)
+                snapshot.children.filter {
+                    matchById(it, id) && matchByCategory(it, category)
+                }.also { quiz ->
+                    if (quiz.isNotEmpty()) {
+                        handler(AppResult.Success(quiz.first().getValue(Quiz::class.java)))
+                    } else {
+                        throwNoElementException()
+                    }
                 }
-                    .map { quiz ->
+            } else {
+                throwNoElementException()
+            }
+        } catch (e: NoSuchElementException) {
+            throwNoElementException()
+        }
+    }.addOnFailureListener { handler(AppResult.Error(it)) }
+
+fun getQuizzesByCategory(category: String, handler: (quiz: AppResult<List<Quiz>>) -> Unit) =
+    Firebase.database.getReference("quizzes").get().addOnSuccessListener { snapshot ->
+        fun throwNoElementException() {
+            handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
+        }
+        try {
+            if (snapshot.hasChildren()) {
+                val result =
+                    snapshot.children.filter { matchByCategory(it, category) }.map { quiz ->
                         quiz.getValue(Quiz::class.java)
-                    })
+                    }
+                if (result.isNotEmpty()) {
+                    AppResult.Success(result)
+                } else throwNoElementException()
             } else {
                 throwNoElementException()
             }
@@ -139,7 +161,7 @@ fun getQuizzesCreated(
                 if (snapshot.hasChildren()) {
                     snapshot.children.onEach { quizId ->
                         quizId.key?.let {
-                            getQuizzes(it, quizCategory.name) { quizList ->
+                            getQuizzesByCategory(quizCategory.name) { quizList ->
                                 handler(quizList)
                             }
                         }

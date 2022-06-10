@@ -56,7 +56,7 @@ class SeeAvailableQuizActivity : BaseActivity() {
                     is AppResult.Success -> {
                         hideProgress()
                         res.successData?.let { quiz ->
-                            (binding.rvAvailableQuizzez.adapter as QuizAvailableAdapter).refreshList(
+                            (binding.rvAvailableQuizzez.adapter as QuizAvailableAdapter).addToList(
                                 quiz
                             )
                         }
