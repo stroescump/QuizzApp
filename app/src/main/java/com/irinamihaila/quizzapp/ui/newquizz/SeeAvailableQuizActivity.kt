@@ -10,7 +10,6 @@ import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.AppResult
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding
-import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
 
 class SeeAvailableQuizActivity : BaseActivity() {
@@ -44,7 +43,7 @@ class SeeAvailableQuizActivity : BaseActivity() {
 
     override fun setupObservers() {
         lifecycleScope.launch {
-            viewModel.quizzesFlow.collectIndexed { _, res ->
+            viewModel.quizzesFlow.collect { res ->
                 when (res) {
                     is AppResult.Error -> {
                         hideProgress()
