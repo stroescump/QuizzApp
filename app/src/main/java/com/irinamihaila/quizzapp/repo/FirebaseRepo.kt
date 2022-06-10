@@ -1,4 +1,4 @@
-package com.irinamihaila.quizzapp.utils
+package com.irinamihaila.quizzapp.repo
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -7,6 +7,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.models.QuizUser
+import com.irinamihaila.quizzapp.utils.AppResult
 
 fun getUserNode(username: String) = Firebase.database.getReference("users/$username")
 

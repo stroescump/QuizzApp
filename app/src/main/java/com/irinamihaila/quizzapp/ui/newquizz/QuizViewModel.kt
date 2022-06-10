@@ -7,9 +7,9 @@ import com.google.firebase.database.GenericTypeIndicator
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
-import com.irinamihaila.quizzapp.utils.createNewQuiz
-import com.irinamihaila.quizzapp.utils.getQuizFromDB
-import com.irinamihaila.quizzapp.utils.getQuizzesFromUsername
+import com.irinamihaila.quizzapp.repo.createNewQuiz
+import com.irinamihaila.quizzapp.repo.getQuizFromDB
+import com.irinamihaila.quizzapp.repo.getQuizzesFromUsername
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

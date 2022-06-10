@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.AppResult
-import com.irinamihaila.quizzapp.utils.getAvailableQuizzes
-import com.irinamihaila.quizzapp.utils.getQuiz
+import com.irinamihaila.quizzapp.repo.getAvailableQuizzes
+import com.irinamihaila.quizzapp.repo.getQuiz
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
