@@ -43,7 +43,7 @@ class SeeAvailableQuizViewModel(
             is AppResult.Success -> {
                 val result = mutableListOf<Quiz>()
                 res.successData?.onEach { quizDetails ->
-                    getQuizDetails(quizDetails.first, quizCategory.name) { quizResult ->
+                    getQuizDetails(quizDetails.first, Quiz(), quizCategory.name) { quizResult ->
                         when (quizResult) {
                             is AppResult.Error -> {
                                 quizzesFlow.update { AppResult.Error(quizResult.exception) }

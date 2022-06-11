@@ -2,6 +2,7 @@ package com.irinamihaila.quizzapp.ui.newquizz
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.GenericTypeIndicator
 import com.irinamihaila.quizzapp.models.Question
@@ -9,6 +10,7 @@ import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.repo.createNewQuiz
 import com.irinamihaila.quizzapp.repo.getQuizFromDB
 import com.irinamihaila.quizzapp.repo.getQuizzesFromUsername
+import com.irinamihaila.quizzapp.repo.getUserNode
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.AppResult
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
@@ -69,6 +71,25 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
             }
     }
 
+    fun updateQuiz(quiz: Quiz) {
+        sharedPrefs.getUsername()
+            ?.let { user ->
+                quiz.id?.let { id ->
+                    getUserNode(user).child("availableQuizzes").child(id).updateChildren(
+                        mapOf(
+                            "name" to quiz.name,
+                            "issuedDate" to quiz.issuedDate,
+                            "redo" to quiz.isRedo
+                        )
+                    ) { error, _ ->
+                        error?.let { e ->
+                            uiState.update { false to e.message }
+                        } ?: uiState.update { true to null }
+                    }
+                } ?: throw IllegalArgumentException("Every quiz must have an ID.")
+            } ?: throw IllegalArgumentException("There is no username stored in SharedPreferences.")
+    }
+
     fun getQuestionsFromSelectedQuiz(quizId: String) {
         editQuizLiveData.postValue(AppResult.Progress)
         getQuizFromDB(quizId).get()
@@ -92,6 +113,12 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
                         uiState.update { false to exception.localizedMessage }
                     }
             }
+        }
+    }
+
+    class Factory(private val sharedPrefs: SharedPrefsUtils) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return QuizViewModel(sharedPrefs) as T
         }
     }
 

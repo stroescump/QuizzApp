@@ -107,36 +107,37 @@ fun getQuizzesCreated(
     quizCategory: QuizCategory,
     handler: (quiz: AppResult<Quiz>) -> Unit
 ) = getUserNode(username).child("availableQuizzes")
-    .addValueEventListener(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            if (snapshot.hasChildren()) {
-                snapshot.children.filter { quizSnapshot ->
-                    quizSnapshot.child("category")
-                        .exists() && (quizSnapshot.child("category").value as String == quizCategory.name)
-                }.also {
-                    if (it.isNotEmpty()) {
-                        it.onEach { quizFiltered ->
-                            quizFiltered.key?.let { key ->
-                                getQuizDetails(key, quizCategory.name) { quiz ->
-                                    handler(quiz)
-                                }
+    .get().addOnSuccessListener { snapshot ->
+        if (snapshot.hasChildren()) {
+            snapshot.children.filter { quizSnapshot ->
+                quizSnapshot.child("category")
+                    .exists() && (quizSnapshot.child("category").value as String == quizCategory.name)
+            }.also {
+                if (it.isNotEmpty()) {
+                    it.onEach { quizFiltered ->
+                        quizFiltered.key?.let { key ->
+                            val quiz = quizFiltered.getValue(Quiz::class.java)
+                            getQuizDetails(key, quiz ?: Quiz(), quizCategory.name) { quiz ->
+                                handler(quiz)
                             }
-                                ?: throw IllegalArgumentException("Node cannot lack a key. ${snapshot.ref}")
                         }
-                    } else {
-                        handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
+                            ?: throw IllegalArgumentException("Node cannot lack a key. ${snapshot.ref}")
                     }
+                } else {
+                    handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
                 }
-            } else handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
-        }
+            }
+        } else handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
+    }.addOnFailureListener {
+        handler(AppResult.Error(it))
+    }
 
-        override fun onCancelled(error: DatabaseError) {
-            handler(AppResult.Error(error.toException()))
-        }
-
-    })
-
-fun getQuizDetails(id: String, category: String, handler: (quiz: AppResult<Quiz>) -> Unit) =
+fun getQuizDetails(
+    id: String,
+    quizInitialDetails: Quiz,
+    category: String,
+    handler: (quiz: AppResult<Quiz>) -> Unit
+) =
     Firebase.database.getReference("quizzes").get().addOnSuccessListener { snapshot ->
         fun throwNoElementException() {
             handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
@@ -145,8 +146,10 @@ fun getQuizDetails(id: String, category: String, handler: (quiz: AppResult<Quiz>
             if (snapshot.hasChildren()) {
                 val quizRef = snapshot.child(id)
                 if (quizRef.exists() && matchByCategory(quizRef, category)) {
-                    val quiz = quizRef.getValue(Quiz::class.java).apply { this?.id = id }
-                    quiz?.let { handler(AppResult.Success(it)) }
+                    val quizFull = quizInitialDetails.apply {
+                        questions = quizRef.getValue(Quiz::class.java)?.questions
+                    }
+                    handler(AppResult.Success(quizFull))
                 } else {
                     Log.e("FirebaseRepo.kt", "getQuizDetails: $quizRef does not exist. ")
                     throw IllegalArgumentException("This node does not exist in QuizDB - ${quizRef.key}")

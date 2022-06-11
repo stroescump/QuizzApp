@@ -10,7 +10,7 @@
         android:id="@+id/rvNewQuestions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/btnAddMore"
@@ -19,11 +19,11 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnAddMore"
-        android:layout_width="@dimen/dimen_80dp"
-        android:layout_height="@dimen/dimen_80dp"
-        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_width="@dimen/dimen_50dp"
+        android:layout_height="@dimen/dimen_50dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
         android:background="@drawable/bg_profile_dashboard"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

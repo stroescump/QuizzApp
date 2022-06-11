@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.irinamihaila.quizzapp.R
@@ -19,7 +20,11 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentCreateQuizBottomSheetBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by lazy { QuizViewModel(SharedPrefsUtils(requireContext())) }
+    private val viewModel by activityViewModels<QuizViewModel> {
+        QuizViewModel.Factory(
+            SharedPrefsUtils(requireContext())
+        )
+    }
     private val quizId by lazy {
         arguments?.getString("quizId") ?: throw IllegalStateException("Must have a valid quiz id.")
     }

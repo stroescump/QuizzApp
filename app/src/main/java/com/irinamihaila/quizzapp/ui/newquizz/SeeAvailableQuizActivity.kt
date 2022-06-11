@@ -41,22 +41,36 @@ class SeeAvailableQuizActivity : BaseActivity() {
 
     override fun initViews() {
         with(binding) {
-            rvAvailableQuizzez.adapter = QuizAvailableAdapter(mutableListOf()) { quiz ->
-                if ((quiz.isRedo == true || quiz.percentage == null) && viewModel.userType == PLAYER) {
-                    navigateTo(
-                        TakeQuizActivity::class.java,
-                        extras = Bundle().also { it.putParcelable("quiz", quiz) })
-                } else if (viewModel.userType == AUTHOR) {
-                    navigateTo(
-                        CreateQuizActivity::class.java,
-                        extras = Bundle().also {
-                            it.putBoolean("isEdit", true)
-                            it.putBoolean("IS_QUIZ_EMPTY", quiz.questions!!.isEmpty())
-                            it.putString("quizId", quiz.id)
-                        })
-                } else displayError(getString(R.string.error_take_quiz_once))
-            }
+            rvAvailableQuizzez.adapter =
+                QuizAvailableAdapter(mutableListOf()) { quiz, isLongPress ->
+                    when (isLongPress) {
+                        true -> handleLongClickQuiz(quiz)
+                        false -> handleClickQuiz(quiz)
+                    }
+                }
         }
+    }
+
+    private fun handleClickQuiz(quiz: Quiz) {
+        if ((quiz.isRedo == true || quiz.percentage == null) && viewModel.userType == PLAYER) {
+            navigateTo(
+                TakeQuizActivity::class.java,
+                extras = Bundle().also { it.putParcelable("quiz", quiz) })
+        } else if (viewModel.userType == AUTHOR) {
+            navigateTo(
+                CreateQuizActivity::class.java,
+                extras = Bundle().also {
+                    it.putParcelable("quizCategory", viewModel.quizCategory)
+                    it.putBoolean("isEdit", true)
+                    it.putBoolean("IS_QUIZ_EMPTY", quiz.questions!!.isEmpty())
+                    it.putString("quizId", quiz.id)
+                })
+        } else displayError(getString(R.string.error_take_quiz_once))
+    }
+
+    private fun handleLongClickQuiz(quiz: Quiz) {
+        QuizDetailsBottomSheetFragment.newInstance(quiz)
+            .show(supportFragmentManager, QuizDetailsBottomSheetFragment::class.java.simpleName)
     }
 
     override fun setupObservers() {

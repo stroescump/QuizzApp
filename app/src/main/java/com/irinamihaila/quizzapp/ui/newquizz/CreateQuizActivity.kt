@@ -1,6 +1,7 @@
 package com.irinamihaila.quizzapp.ui.newquizz
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.irinamihaila.quizzapp.databinding.ActivityCreateQuizBinding
 import com.irinamihaila.quizzapp.models.Question
@@ -14,7 +15,11 @@ import kotlinx.coroutines.flow.update
 
 class CreateQuizActivity : BaseActivity() {
     override val binding by viewBinding(ActivityCreateQuizBinding::inflate)
-    private val viewModel by lazy { QuizViewModel(SharedPrefsUtils(this)) }
+    private val viewModel by viewModels<QuizViewModel> {
+        QuizViewModel.Factory(
+            SharedPrefsUtils(this)
+        )
+    }
     private var isEditMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
