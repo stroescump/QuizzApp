@@ -7,8 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.ActivitySeeAvailableQuizBinding
 import com.irinamihaila.quizzapp.models.Quiz
-import com.irinamihaila.quizzapp.models.UserType.AUTHOR
-import com.irinamihaila.quizzapp.models.UserType.valueOf
+import com.irinamihaila.quizzapp.models.UserType.*
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.DashboardActivity
 import com.irinamihaila.quizzapp.utils.AppResult
@@ -43,10 +42,18 @@ class SeeAvailableQuizActivity : BaseActivity() {
     override fun initViews() {
         with(binding) {
             rvAvailableQuizzez.adapter = QuizAvailableAdapter(mutableListOf()) { quiz ->
-                if (quiz.isRedo == true || quiz.percentage == null) {
+                if ((quiz.isRedo == true || quiz.percentage == null) && viewModel.userType == PLAYER) {
                     navigateTo(
                         TakeQuizActivity::class.java,
                         extras = Bundle().also { it.putParcelable("quiz", quiz) })
+                } else if (viewModel.userType == AUTHOR) {
+                    navigateTo(
+                        CreateQuizActivity::class.java,
+                        extras = Bundle().also {
+                            it.putBoolean("isEdit", true)
+                            it.putBoolean("IS_QUIZ_EMPTY", quiz.questions!!.isEmpty())
+                            it.putString("quizId", quiz.id)
+                        })
                 } else displayError(getString(R.string.error_take_quiz_once))
             }
         }
@@ -81,7 +88,10 @@ class SeeAvailableQuizActivity : BaseActivity() {
                     navigateTo(
                         CreateQuizActivity::class.java,
                         true,
-                        Bundle().also { it.putParcelable("quizCategory", viewModel.quizCategory) })
+                        Bundle().also {
+                            it.putBoolean("isEdit", true)
+                            it.putParcelable("quizCategory", viewModel.quizCategory)
+                        })
                 }.setButton(
                     AlertDialogButton.NegativeButton
                 ) {

@@ -85,7 +85,7 @@
             android:id="@+id/rbAnswer2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
             android:backgroundTint="@color/black"
             android:buttonTint="@color/white" />
 
@@ -93,15 +93,27 @@
             android:id="@+id/rbAnswer3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
             android:buttonTint="@color/white" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/rbAnswer4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
             android:buttonTint="@color/white" />
     </RadioGroup>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnEdit"
+        style="@style/CustomButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:text="@string/edit"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/etAnswer4"
+        app:layout_constraintStart_toStartOf="@id/etAnswer4"
+        app:layout_constraintTop_toBottomOf="@id/etAnswer4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

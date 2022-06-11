@@ -1,5 +1,6 @@
 package com.irinamihaila.quizzapp.ui.newquizz
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.children
@@ -7,11 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.irinamihaila.quizzapp.databinding.LayoutQuestionItemBinding
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.ui.newquizz.QuizItemAdapter.CreateQuizVH
+import com.irinamihaila.quizzapp.utils.show
 import com.irinamihaila.quizzapp.utils.toEditable
+import okhttp3.internal.toImmutableList
 
 class QuizItemAdapter(
     private val questionList: MutableList<Question>,
     private val isCreateMode: Boolean = true,
+    val onQuestionClick: (question: Question, position: Int) -> Unit
 ) : RecyclerView.Adapter<CreateQuizVH>() {
     private lateinit var binding: LayoutQuestionItemBinding
 
@@ -22,25 +26,28 @@ class QuizItemAdapter(
                 parent,
                 false
             )
-        return CreateQuizVH(binding, isCreateMode)
+        return CreateQuizVH(binding, isCreateMode, onQuestionClick)
     }
 
     override fun onBindViewHolder(holder: CreateQuizVH, position: Int) {
-        holder.bind(questionList[position])
+        holder.bind(questionList[position], position)
     }
 
     override fun getItemCount(): Int = questionList.size
 
     class CreateQuizVH(
         private val binding: LayoutQuestionItemBinding,
-        private val isCreateMode: Boolean
+        private val isCreateMode: Boolean,
+        private val onQuestionClick: (question: Question, position: Int) -> Unit,
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(question: Question) {
+        fun bind(question: Question, position: Int) {
             with(binding) {
-                if (isCreateMode.not()) {
-                    makeFieldsViewOnly()
+                makeFieldsViewOnly()
+                if (isCreateMode) {
+                    btnEdit.show()
+                    btnEdit.setOnClickListener { onQuestionClick(question, position) }
                 }
                 with(question) {
                     etNewQuestion.text = this.question?.toEditable()
@@ -82,4 +89,18 @@ class QuizItemAdapter(
         questionList.add(question)
         notifyItemInserted(questionList.lastIndex)
     }
+
+    fun updateQuestion(oldQuestionPos: Int, newQuestion: Question) {
+        questionList[oldQuestionPos] = newQuestion
+        notifyItemChanged(oldQuestionPos)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun refreshList(questions: List<Question>) {
+        questionList.clear()
+        questionList.addAll(questions)
+        notifyDataSetChanged()
+    }
+
+    fun getQuestions(): List<Question> = questionList.toImmutableList()
 }

@@ -63,29 +63,6 @@ fun getQuizFromDB(quizId: String) =
 fun createUserNode(quizUser: QuizUser) =
     Firebase.database.getReference("users/${quizUser.username}").setValue(quizUser)
 
-//fun getQuizzesByCategory(category: String, handler: (quiz: AppResult<List<Quiz>>) -> Unit) =
-//    Firebase.database.getReference("quizzes").get().addOnSuccessListener { snapshot ->
-//        fun throwNoElementException() {
-//            handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
-//        }
-//        try {
-//            if (snapshot.hasChildren()) {
-//                val result =
-//                    snapshot.children.filter { matchByCategory(it, category) }.map { quiz ->
-//                        quiz.getValue(Quiz::class.java)
-//                    }
-//                if (result.isNotEmpty()) {
-//                    AppResult.Success(result)
-//                } else throwNoElementException()
-//            } else {
-//                throwNoElementException()
-//            }
-//        } catch (e: NoSuchElementException) {
-//            throwNoElementException()
-//        }
-//    }.addOnFailureListener { handler(AppResult.Error(it)) }
-
-
 private fun matchByCategory(quiz: DataSnapshot?, category: String) = run {
     quiz?.let {
         return (quiz.exists() && quiz.hasChild("category") && quiz.child("category")
@@ -94,10 +71,8 @@ private fun matchByCategory(quiz: DataSnapshot?, category: String) = run {
     return@run false
 }
 
-
 private fun matchById(it: DataSnapshot, id: String) =
     it.key!! == id
-
 
 fun getAvailableQuizzes(
     username: String,
@@ -170,10 +145,11 @@ fun getQuizDetails(id: String, category: String, handler: (quiz: AppResult<Quiz>
             if (snapshot.hasChildren()) {
                 val quizRef = snapshot.child(id)
                 if (quizRef.exists() && matchByCategory(quizRef, category)) {
-                    val quiz = quizRef.getValue(Quiz::class.java)
+                    val quiz = quizRef.getValue(Quiz::class.java).apply { this?.id = id }
                     quiz?.let { handler(AppResult.Success(it)) }
                 } else {
                     Log.e("FirebaseRepo.kt", "getQuizDetails: $quizRef does not exist. ")
+                    throw IllegalArgumentException("This node does not exist in QuizDB - ${quizRef.key}")
                 }
             } else {
                 throwNoElementException()
