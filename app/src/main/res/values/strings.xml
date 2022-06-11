@@ -28,4 +28,5 @@
     <string name="error_take_quiz_once">Sorry. You can only take part in this quiz once.</string>
     <string name="dashboardTitleAuthor">What challenges will you bring today?</string>
     <string name="dashboardAuthorSubtitle">Let\'s get started</string>
+    <string name="error_unable_to_find_any_quizzes">Unable to find any quizzes. Try creating one first.</string>
 </resources>

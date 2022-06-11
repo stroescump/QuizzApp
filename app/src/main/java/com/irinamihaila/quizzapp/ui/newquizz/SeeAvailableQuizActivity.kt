@@ -2,11 +2,15 @@ package com.irinamihaila.quizzapp.ui.newquizz
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.ActivitySeeAvailableQuizBinding
+import com.irinamihaila.quizzapp.models.Quiz
+import com.irinamihaila.quizzapp.models.UserType.AUTHOR
+import com.irinamihaila.quizzapp.models.UserType.valueOf
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
-import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
+import com.irinamihaila.quizzapp.ui.dashboard.DashboardActivity
 import com.irinamihaila.quizzapp.utils.AppResult
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding
