@@ -8,10 +8,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.irinamihaila.quizzapp.models.QuizUser
-import com.irinamihaila.quizzapp.utils.AppResult
-import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.repo.createUserNode
 import com.irinamihaila.quizzapp.repo.getUserNode
+import com.irinamihaila.quizzapp.utils.AppResult
+import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 
 class AuthenticationViewModel(val sharedPrefsUtils: SharedPrefsUtils) : ViewModel() {
     val uiStateLiveData = MutableLiveData<AppResult<Triple<String, String, String>>>()

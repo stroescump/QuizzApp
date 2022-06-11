@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.ItemQuizAvailableBinding
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.ui.newquizz.QuizAvailableAdapter.AvailableQuizVH
@@ -40,6 +41,7 @@ class QuizAvailableAdapter(
         fun bind(quiz: Quiz) {
             with(binding) {
                 root.setOnClickListener { onQuizClickListener(quiz) }
+                ivQuiz.setImageResource(R.drawable.quiz_header_picture)
                 tvQuizAvailableTitle.text = quiz.name
                 quiz.percentage?.let { tvQuizPercentage.text = "$it%" }
                 tvQuizAvailableIsRedoEnabled.text = "Redo available: ${quiz.isRedo}"

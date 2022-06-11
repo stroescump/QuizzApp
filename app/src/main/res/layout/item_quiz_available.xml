@@ -9,6 +9,15 @@
     android:layout_marginEnd="@dimen/dimen_20dp"
     android:background="@drawable/bg_item_leaderboard">
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivQuiz"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_130dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/CustomShapeAppearanceImageView"
+        tools:src="@drawable/quiz_header_picture" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvQuizAvailableTitle"
         android:layout_width="match_parent"
@@ -19,7 +28,7 @@
         android:fontFamily="@font/coolvetica_rg"
         android:textColor="@color/white"
         android:textSize="@dimen/dimen_16sp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivQuiz"
         tools:text="Example Title Quiz 1" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -47,7 +56,7 @@
         android:textSize="@dimen/dimen_20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivQuiz"
         tools:text="78%" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

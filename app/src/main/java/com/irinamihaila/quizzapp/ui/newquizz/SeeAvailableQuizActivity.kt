@@ -19,15 +19,22 @@ class SeeAvailableQuizActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         intent.getParcelableExtra<Bundle>("data")?.also {
-            viewModel.quizCategory = it.getParcelable("data") ?: QuizCategory.QuizGeneralKnowledge
-            SharedPrefsUtils(this).getUsername()
-                ?.let { username -> viewModel.getQuizzesForUser(username) }
+            viewModel.quizCategory = it.getParcelable("quizCategory")
+                ?: throw IllegalArgumentException("Must have a valid quiz category.")
+            SharedPrefsUtils(this).apply {
+                getUsername()?.let { username ->
+                    getUserType()?.let { userType ->
+                        valueOf(userType).also { type ->
+                            viewModel.userType = type
+                            viewModel.getQuizzesForUser(username, type)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    override fun setupListeners() {
-
-    }
+    override fun setupListeners() {}
 
     override fun initViews() {
         with(binding) {
@@ -45,28 +52,39 @@ class SeeAvailableQuizActivity : BaseActivity() {
         lifecycleScope.launch {
             viewModel.quizzesFlow.collect { res ->
                 when (res) {
-                    is AppResult.Error -> {
-                        hideProgress()
-                        displayError(res.exception.localizedMessage)
-                    }
-                    AppResult.Progress -> {
-                        showProgress()
-                    }
+                    is AppResult.Error -> handleErrors(res)
+                    AppResult.Progress -> showProgress()
                     is AppResult.Success -> {
                         hideProgress()
                         res.successData?.let { quiz ->
-                            (binding.rvAvailableQuizzez.adapter as QuizAvailableAdapter).addToList(
-                                quiz
-                            )
+                            getQuizAdapter().addToList(quiz)
                         }
                     }
                 }
             }
         }
-
-        viewModel.errorLiveData.observe(this) {
-            hideProgress()
-            displayError(it.localizedMessage)
-        }
     }
+
+    private fun handleErrors(res: AppResult.Error<Quiz>) {
+        val message = res.exception.localizedMessage
+        if (message == getString(R.string.error_unable_to_find_any_quizzes)
+            && viewModel.userType == AUTHOR
+        ) {
+            AlertDialog.Builder(this@SeeAvailableQuizActivity)
+                .setMessage("Would you like to create a quiz?").setButton(
+                    AlertDialogButton.PositiveButton
+                ) {
+                    navigateTo(
+                        CreateQuizActivity::class.java,
+                        true,
+                        Bundle().also { it.putParcelable("quizCategory", viewModel.quizCategory) })
+                }.setButton(
+                    AlertDialogButton.NegativeButton
+                ) {
+                    navigateTo(DashboardActivity::class.java, true)
+                }.create().show()
+        } else displayError(message)
+    }
+
+    private fun getQuizAdapter() = (binding.rvAvailableQuizzez.adapter as QuizAvailableAdapter)
 }

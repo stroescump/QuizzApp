@@ -24,7 +24,6 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
 
     val uiState = MutableStateFlow<Pair<Boolean, String?>?>(null)
     val currentQuizId = MutableStateFlow<String?>(null)
-    val quizzesCreated = emptyFlow<AppResult<List<Quiz>>>()
 
     fun uploadQuestion(question: Question, quizId: String) {
 
@@ -67,15 +66,6 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
             }
         }
     }
-
-    fun getCreatedQuizzes(quizCategory: QuizCategory) =
-        sharedPrefs.getUsername()?.let {
-            getQuizzesCreated(it, quizCategory) { res ->
-                quizzesCreated.onEmpty {
-                    emit(res)
-                }
-            }
-        }
 }
 
 private fun addNewQuiz(

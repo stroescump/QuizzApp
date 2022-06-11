@@ -7,7 +7,6 @@ import com.irinamihaila.quizzapp.databinding.ActivityDashboardBinding
 import com.irinamihaila.quizzapp.models.UserType
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory.*
-import com.irinamihaila.quizzapp.ui.newquizz.CreateQuizActivity
 import com.irinamihaila.quizzapp.ui.newquizz.SeeAvailableQuizActivity
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding
@@ -58,17 +57,10 @@ class DashboardActivity : BaseActivity() {
     }
 
     private fun provideQuizClickListener(quizCategory: QuizCategory) {
-        if (viewModel.userType == UserType.PLAYER) {
-            navigateTo(
-                SeeAvailableQuizActivity::class.java,
-                extras = Bundle().also { it.putParcelable("data", quizCategory) }
-            )
-        } else {
-            navigateTo(
-                CreateQuizActivity::class.java,
-                extras = Bundle().also { it.putParcelable("quizCategory", quizCategory) }
-            )
-        }
+        navigateTo(
+            SeeAvailableQuizActivity::class.java,
+            extras = Bundle().also { it.putParcelable("quizCategory", quizCategory) }
+        )
     }
 
     private fun getUserFullname() = SharedPrefsUtils(this).getFullName()
