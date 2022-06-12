@@ -18,4 +18,5 @@
     <dimen name="dimen_110dp">110dp</dimen>
     <dimen name="dimen_40sp">40sp</dimen>
     <dimen name="dimen_20sp">20sp</dimen>
+    <dimen name="dimen_32sp">32sp</dimen>
 </resources>

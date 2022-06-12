@@ -43,14 +43,14 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
         }
     }
 
-    fun createQuiz(quizCategory: QuizCategory) {
+    fun createQuiz(quizCategory: QuizCategory, currentTime: String) {
         val quizDB = createNewQuiz().apply {
             child("category").setValue(quizCategory.name)
         }
         sharedPrefs.getUsername()?.let {
             getQuizzesFromUsername(it).get()
                 .addOnSuccessListener { res ->
-                    addNewQuiz(res, quizDB.key!!, quizCategory.name)
+                    addNewQuiz(res, quizDB.key!!, quizCategory.name, currentTime)
                     currentQuizId.update { quizDB.key }
                     uiState.update { true to null }
                 }
@@ -63,11 +63,16 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
     private fun addNewQuiz(
         usernameQuizzes: DataSnapshot,
         quizKey: String,
-        category: String
+        category: String,
+        currentTime: String
     ) {
         usernameQuizzes.ref.child(quizKey).setValue(Quiz(id = quizKey))
             .addOnCompleteListener {
-                usernameQuizzes.ref.child(quizKey).child("category").setValue(category)
+                usernameQuizzes.ref.child(quizKey).apply {
+                    child("category").setValue(category)
+                    child("issuedDate").setValue(currentTime)
+                    child("name").setValue("New quiz - $currentTime")
+                }
             }
     }
 

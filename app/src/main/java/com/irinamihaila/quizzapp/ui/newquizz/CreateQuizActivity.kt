@@ -7,11 +7,15 @@ import com.irinamihaila.quizzapp.databinding.ActivityCreateQuizBinding
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
-import com.irinamihaila.quizzapp.utils.AppResult
-import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
-import com.irinamihaila.quizzapp.utils.viewBinding
+import com.irinamihaila.quizzapp.utils.*
+import com.irinamihaila.quizzapp.utils.Constants.IS_EDIT
+import com.irinamihaila.quizzapp.utils.Constants.IS_NEW_QUIZ
+import com.irinamihaila.quizzapp.utils.Constants.QUIZ_ID
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CreateQuizActivity : BaseActivity() {
     override val binding by viewBinding(ActivityCreateQuizBinding::inflate)
@@ -21,20 +25,27 @@ class CreateQuizActivity : BaseActivity() {
         )
     }
     private var isEditMode = false
+    private var isNewQuiz = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         intent.extras?.getBundle("data")?.let {
-            isEditMode = it.getBoolean("isEdit", false)
-            it.getString("quizId", null)
+            isEditMode = it.getBoolean(IS_EDIT, false)
+            isNewQuiz = it.getBoolean(IS_NEW_QUIZ, false)
+            it.getString(QUIZ_ID, null)
                 .also { quizId -> viewModel.currentQuizId.update { quizId } }
-            val isEmptyQuiz = it.getBoolean("IS_QUIZ_EMPTY", false)
-            if (isEditMode.not() || isEmptyQuiz.not()) {
-                val quizCategory = it.getParcelable<QuizCategory>("quizCategory")
+            if (isEditMode.not() || isNewQuiz) {
+                val quizCategory = it.getParcelable<QuizCategory>(Constants.QUIZ_CATEGORY)
                 viewModel.createQuiz(
-                    quizCategory ?: throw IllegalStateException("Must have a valid quiz category")
+                    quizCategory ?: throw IllegalStateException("Must have a valid quiz category"),
+                    SimpleDateFormat.getDateInstance(DateFormat.SHORT)
+                        .format(Calendar.getInstance().time)
                 )
             } else {
-                viewModel.currentQuizId.value?.let { id -> viewModel.getQuestionsFromSelectedQuiz(id) }
+                viewModel.currentQuizId.value?.let { id ->
+                    viewModel.getQuestionsFromSelectedQuiz(
+                        id
+                    )
+                }
             }
         }
         super.onCreate(savedInstanceState)
@@ -60,10 +71,15 @@ class CreateQuizActivity : BaseActivity() {
     private fun getQuizAdapter() = (binding.rvNewQuestions.adapter as QuizItemAdapter)
 
     override fun initViews() {
-        binding.rvNewQuestions.adapter =
-            QuizItemAdapter(mutableListOf(), isEditMode) { question, pos ->
-                showQuestionsBottomSheet(question, pos)
+        with(binding) {
+            rvNewQuestions.adapter =
+                QuizItemAdapter(mutableListOf(), isEditMode) { question, pos ->
+                    showQuestionsBottomSheet(question, pos)
+                }
+            if (isNewQuiz) {
+                tvNoQuestions.show()
             }
+        }
     }
 
     override fun setupObservers() {

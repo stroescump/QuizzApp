@@ -14,6 +14,35 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_quiz_available" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNoQuizzes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_30dp"
+        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:fontFamily="@font/coolvetica_rg"
+        android:gravity="center"
+        android:letterSpacing="0.03"
+        android:text="@string/add_some_quizzes_to_get_the_fun_started"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_32sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnAddMore"
+        android:layout_width="@dimen/dimen_50dp"
+        android:layout_height="@dimen/dimen_50dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:background="@drawable/bg_profile_dashboard"
+        android:src="@drawable/add"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <include
         android:id="@+id/layoutProgress"
         layout="@layout/layout_progress"

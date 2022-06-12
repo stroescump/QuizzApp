@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.irinamihaila.quizzapp.R
@@ -16,9 +17,12 @@ import com.irinamihaila.quizzapp.utils.value
 import kotlinx.coroutines.flow.collectLatest
 
 private const val ARG_QUIZ = "QUIZ"
+private const val ARG_QUIZ_POS = "QUIZ_POS"
+private const val DEFAULT_VALUE = 0
 
 class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
-    lateinit var quiz: Quiz
+    private lateinit var quiz: Quiz
+    private var quizPos: Int = DEFAULT_VALUE
     private val viewModel by activityViewModels<QuizViewModel> {
         QuizViewModel.Factory(
             SharedPrefsUtils(requireContext())
@@ -29,6 +33,7 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+            quizPos = it.getInt(ARG_QUIZ_POS)
             quiz = it.getParcelable(ARG_QUIZ)
                 ?: throw IllegalArgumentException("Need a quiz passed as params.")
         }
@@ -76,18 +81,24 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
                     name = etQuizName.value()
                     issuedDate = etCreationDate.value()
                     isRedo = switchIsRedo.isChecked
+
                 }
+                getAdapter().updateItem(quiz, quizPos)
                 viewModel.updateQuiz(quiz)
             }
         }
     }
 
+    private fun getAdapter() =
+        ((requireActivity() as SeeAvailableQuizActivity).findViewById<RecyclerView>(R.id.rvAvailableQuizzez).adapter as QuizAvailableAdapter)
+
     companion object {
         @JvmStatic
-        fun newInstance(quiz: Quiz) =
+        fun newInstance(quiz: Quiz, quizPos: Int) =
             QuizDetailsBottomSheetFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_QUIZ, quiz)
+                    putInt(ARG_QUIZ_POS, quizPos)
                 }
             }
     }

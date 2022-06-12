@@ -17,6 +17,23 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/layout_question_item" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNoQuestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_30dp"
+        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:fontFamily="@font/coolvetica_rg"
+        android:gravity="center"
+        android:letterSpacing="0.03"
+        android:text="@string/unleash_your_creativity_add_some_questions_to_this_quiz"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_32sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnAddMore"
         android:layout_width="@dimen/dimen_50dp"
