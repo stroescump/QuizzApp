@@ -13,6 +13,23 @@ import com.irinamihaila.quizzapp.utils.AppResult
 
 fun getUserNode(username: String) = Firebase.database.getReference("users/$username")
 
+fun deleteQuizFromUsers(quizId: String, handler: (AppResult<Nothing>) -> Unit) =
+    Firebase.database.getReference("users").get().addOnSuccessListener {
+        it.children.onEach { user ->
+            val availableQuizzes = user.child("availableQuizzes")
+            if (availableQuizzes.exists() && availableQuizzes.hasChildren()) {
+                availableQuizzes.children.first { quiz -> quiz.hasChild(quizId) }.ref.removeValue()
+                    .addOnSuccessListener {
+                        handler(AppResult.Success(null))
+                    }.addOnFailureListener { e ->
+                        handler(AppResult.Error(e))
+                    }
+            }
+        }
+    }.addOnFailureListener { e ->
+        handler(AppResult.Error(e))
+    }
+
 fun getLeaderboardFirebase(
     quizId: String,
     handler: (leaderboard: AppResult<List<Pair<String, Int>>>) -> Unit

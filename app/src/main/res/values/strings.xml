@@ -36,4 +36,7 @@
     <string name="creation_date">Creation date</string>
     <string name="is_redo_available">Is redo available</string>
     <string name="update_quiz">Update quiz</string>
+    <string name="delete_successful">Quiz deleted successfully.</string>
+    <string name="error_valid_quiz_category">Must have a valid quiz category.</string>
+    <string name="would_you_like_to_create_quiz">Would you like to create a quiz?</string>
 </resources>

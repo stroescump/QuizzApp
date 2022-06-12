@@ -8,6 +8,7 @@ import com.irinamihaila.quizzapp.models.UserType
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory.*
 import com.irinamihaila.quizzapp.ui.newquizz.SeeAvailableQuizActivity
+import com.irinamihaila.quizzapp.utils.Constants
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding
 import kotlinx.parcelize.Parcelize
@@ -59,7 +60,7 @@ class DashboardActivity : BaseActivity() {
     private fun provideQuizClickListener(quizCategory: QuizCategory) {
         navigateTo(
             SeeAvailableQuizActivity::class.java,
-            extras = Bundle().also { it.putParcelable("quizCategory", quizCategory) }
+            extras = Bundle().also { it.putParcelable(Constants.QUIZ_CATEGORY, quizCategory) }
         )
     }
 

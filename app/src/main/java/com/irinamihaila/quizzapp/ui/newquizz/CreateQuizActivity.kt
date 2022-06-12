@@ -8,6 +8,10 @@ import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.AppResult
+import com.irinamihaila.quizzapp.utils.Constants
+import com.irinamihaila.quizzapp.utils.Constants.IS_EDIT
+import com.irinamihaila.quizzapp.utils.Constants.IS_QUIZ_EMPTY
+import com.irinamihaila.quizzapp.utils.Constants.QUIZ_ID
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -24,12 +28,12 @@ class CreateQuizActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         intent.extras?.getBundle("data")?.let {
-            isEditMode = it.getBoolean("isEdit", false)
-            it.getString("quizId", null)
+            isEditMode = it.getBoolean(IS_EDIT, false)
+            it.getString(QUIZ_ID, null)
                 .also { quizId -> viewModel.currentQuizId.update { quizId } }
-            val isEmptyQuiz = it.getBoolean("IS_QUIZ_EMPTY", false)
+            val isEmptyQuiz = it.getBoolean(IS_QUIZ_EMPTY, false)
             if (isEditMode.not() || isEmptyQuiz.not()) {
-                val quizCategory = it.getParcelable<QuizCategory>("quizCategory")
+                val quizCategory = it.getParcelable<QuizCategory>(Constants.QUIZ_CATEGORY)
                 viewModel.createQuiz(
                     quizCategory ?: throw IllegalStateException("Must have a valid quiz category")
                 )
