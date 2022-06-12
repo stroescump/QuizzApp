@@ -41,7 +41,6 @@ class SeeAvailableQuizViewModel(
                 quizzesFlow.update { AppResult.Progress }
             }
             is AppResult.Success -> {
-                val result = mutableListOf<Quiz>()
                 res.successData?.onEach { quizDetails ->
                     getQuizDetails(quizDetails.first, Quiz(), quizCategory.name) { quizResult ->
                         when (quizResult) {
@@ -53,18 +52,14 @@ class SeeAvailableQuizViewModel(
                             }
                             is AppResult.Success -> {
                                 quizResult.successData?.also { quiz ->
-                                    result.add(quiz.apply { percentage = quizDetails.second })
+                                    quizzesFlow.update {
+                                        AppResult.Success(quiz.apply {
+                                            id = quizDetails.first
+                                            percentage = quizDetails.second
+                                        })
+                                    }
                                 }
                             }
-                        }
-                    }
-                }
-                if (result.isEmpty()) {
-                    quizzesFlow.update { AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")) }
-                } else {
-                    result.onEach { quiz ->
-                        quizzesFlow.update {
-                            AppResult.Success(quiz)
                         }
                     }
                 }

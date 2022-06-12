@@ -40,11 +40,6 @@ fun getLeaderboardFirebase(
         private fun isSubscribedToQuiz(user: DataSnapshot) =
             user.hasChild("availableQuizzes") && user.child("availableQuizzes").hasChild(quizId)
 
-        private fun getPercentage(quiz: DataSnapshot) =
-            if (quiz.hasChild("percentage")) {
-                quiz.child("percentage").getValue(Int::class.java)
-            } else null
-
         private fun getFullname(user: DataSnapshot) =
             (user.child("fullName").getValue(String::class.java)
                 ?: throw IllegalArgumentException("User must have fullName."))
@@ -53,6 +48,11 @@ fun getLeaderboardFirebase(
             handler(AppResult.Error(error.toException()))
         }
     })
+
+private fun getPercentage(quiz: DataSnapshot) =
+    if (quiz.hasChild("percentage")) {
+        quiz.child("percentage").getValue(Int::class.java)
+    } else null
 
 fun getQuizzesFromUsername(username: String) =
     Firebase.database.getReference("users/$username/availableQuizzes")
@@ -85,12 +85,7 @@ fun getAvailableQuizzes(
                     val availableQuizList = mutableListOf<Pair<String, Int?>>()
                     snapshot.children.forEach {
                         it.key?.let { quizName ->
-                            if (it.hasChild("percentage")) {
-                                val percentage = it.child("percentage").getValue(Int::class.java)
-                                availableQuizList.add(quizName to percentage)
-                            } else {
-                                availableQuizList.add(quizName to null)
-                            }
+                            availableQuizList.add(quizName to getPercentage(it))
                         }
                     }
                     handler(AppResult.Success(availableQuizList))
@@ -150,7 +145,7 @@ fun getQuizDetails(
                         questions = quizRef.getValue(Quiz::class.java)?.questions
                     }
                     handler(AppResult.Success(quizFull))
-                } else {
+                } else if (quizRef.exists().not()) {
                     Log.e("FirebaseRepo.kt", "getQuizDetails: $quizRef does not exist. ")
                     throw IllegalArgumentException("This node does not exist in QuizDB - ${quizRef.key}")
                 }
