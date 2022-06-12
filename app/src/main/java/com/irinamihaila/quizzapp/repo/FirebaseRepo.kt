@@ -148,7 +148,7 @@ fun getQuizDetails(
                 } else if (quizRef.exists().not()) {
                     Log.e("FirebaseRepo.kt", "getQuizDetails: $quizRef does not exist. ")
                     throw IllegalArgumentException("This node does not exist in QuizDB - ${quizRef.key}")
-                }
+                } else throwNoElementException()
             } else {
                 throwNoElementException()
             }

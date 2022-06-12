@@ -63,6 +63,7 @@ class SeeAvailableQuizViewModel(
                         }
                     }
                 }
+                    ?: quizzesFlow.update { AppResult.Error(Throwable("Unable to find any quizzes. Try creating one first.")) }
             }
         }
     }
