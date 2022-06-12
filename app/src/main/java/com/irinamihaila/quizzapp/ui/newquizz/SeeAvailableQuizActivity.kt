@@ -26,7 +26,6 @@ class SeeAvailableQuizActivity : BaseActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         intent.getParcelableExtra<Bundle>("data")?.also {
             viewModel.quizCategory = it.getParcelable(QUIZ_CATEGORY)
                 ?: throw IllegalArgumentException(getString(R.string.error_valid_quiz_category))
@@ -41,6 +40,7 @@ class SeeAvailableQuizActivity : BaseActivity() {
                 }
             }
         }
+        super.onCreate(savedInstanceState)
     }
 
     override fun setupListeners() {}
