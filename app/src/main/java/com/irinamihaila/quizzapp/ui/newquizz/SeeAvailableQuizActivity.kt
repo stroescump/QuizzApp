@@ -10,13 +10,11 @@ import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.models.UserType.*
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.DashboardActivity
-import com.irinamihaila.quizzapp.utils.AppResult
+import com.irinamihaila.quizzapp.utils.*
 import com.irinamihaila.quizzapp.utils.Constants.IS_EDIT
-import com.irinamihaila.quizzapp.utils.Constants.IS_QUIZ_EMPTY
+import com.irinamihaila.quizzapp.utils.Constants.IS_NEW_QUIZ
 import com.irinamihaila.quizzapp.utils.Constants.QUIZ_CATEGORY
 import com.irinamihaila.quizzapp.utils.Constants.QUIZ_ID
-import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
-import com.irinamihaila.quizzapp.utils.viewBinding
 import kotlinx.coroutines.launch
 
 class SeeAvailableQuizActivity : BaseActivity() {
@@ -43,7 +41,19 @@ class SeeAvailableQuizActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun setupListeners() {}
+    override fun setupListeners() {
+        with(binding) {
+            btnAddMore.setOnClickListener {
+                navigateTo(
+                    CreateQuizActivity::class.java,
+                    extras = Bundle().also {
+                        it.putParcelable(QUIZ_CATEGORY, viewModel.quizCategory)
+                        it.putBoolean(IS_EDIT, true)
+                        it.putBoolean(IS_NEW_QUIZ, true)
+                    })
+            }
+        }
+    }
 
     override fun initViews() {
         with(binding) {
@@ -52,7 +62,8 @@ class SeeAvailableQuizActivity : BaseActivity() {
                     viewModel.userType == AUTHOR,
                     mutableListOf(),
                     handleOnQuizClick(),
-                    handleOnQuizDelete()
+                    handleOnQuizDelete(),
+                    handleOnQuizEmpty()
                 )
         }
     }
@@ -67,6 +78,7 @@ class SeeAvailableQuizActivity : BaseActivity() {
                         is AppResult.Success -> {
                             hideProgress()
                             res.successData?.let { quiz ->
+                                binding.tvNoQuizzes.hide()
                                 getQuizAdapter().addToList(quiz)
                             }
                         }
@@ -89,18 +101,26 @@ class SeeAvailableQuizActivity : BaseActivity() {
         }
     }
 
+    private fun handleOnQuizClick() = { quiz: Quiz, quizPos: Int, isLongPress: Boolean ->
+        when (isLongPress) {
+            true -> handleLongClickQuiz(quiz, quizPos)
+            false -> handleClickQuiz(quiz)
+        }
+    }
+
     private fun handleClickQuiz(quiz: Quiz) {
-        if ((quiz.isRedo == true || quiz.percentage == null) && viewModel.userType == PLAYER) {
+        if (isPlayer(quiz)) {
             navigateTo(
                 TakeQuizActivity::class.java,
+                true,
                 extras = Bundle().also { it.putParcelable("quiz", quiz) })
         } else if (viewModel.userType == AUTHOR) {
             navigateTo(
                 CreateQuizActivity::class.java,
+                true,
                 extras = Bundle().also {
                     it.putParcelable(QUIZ_CATEGORY, viewModel.quizCategory)
                     it.putBoolean(IS_EDIT, true)
-                    it.putBoolean(IS_QUIZ_EMPTY, quiz.questions!!.isEmpty())
                     it.putString(QUIZ_ID, quiz.id)
                 })
         } else displayError(getString(R.string.error_take_quiz_once))
@@ -111,15 +131,12 @@ class SeeAvailableQuizActivity : BaseActivity() {
             .show(supportFragmentManager, QuizDetailsBottomSheetFragment::class.java.simpleName)
     }
 
-    private fun handleOnQuizClick() = { quiz: Quiz, quizPos: Int, isLongPress: Boolean ->
-        when (isLongPress) {
-            true -> handleLongClickQuiz(quiz, quizPos)
-            false -> handleClickQuiz(quiz)
-        }
-    }
-
     private fun handleOnQuizDelete() = { quiz: Quiz ->
         viewModel.deleteQuiz(quiz)
+    }
+
+    private fun handleOnQuizEmpty(): () -> Unit = {
+        binding.tvNoQuizzes.show()
     }
 
     private fun handleErrors(res: AppResult.Error<Quiz>) {
@@ -136,6 +153,7 @@ class SeeAvailableQuizActivity : BaseActivity() {
                         true,
                         Bundle().also {
                             it.putBoolean(IS_EDIT, true)
+                            it.putBoolean(IS_NEW_QUIZ, true)
                             it.putParcelable(QUIZ_CATEGORY, viewModel.quizCategory)
                         })
                 }.setButton(
@@ -145,6 +163,9 @@ class SeeAvailableQuizActivity : BaseActivity() {
                 }.create().show()
         } else displayError(message)
     }
+
+    private fun isPlayer(quiz: Quiz) =
+        (quiz.isRedo == true || quiz.percentage == null) && viewModel.userType == PLAYER
 
     private fun getQuizAdapter() = (binding.rvAvailableQuizzez.adapter as QuizAvailableAdapter)
 }

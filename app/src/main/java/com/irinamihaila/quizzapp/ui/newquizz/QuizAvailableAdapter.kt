@@ -14,7 +14,8 @@ class QuizAvailableAdapter(
     private val isAuthorMode: Boolean,
     private val quizList: MutableList<Quiz>,
     private val onQuizClickListener: (quiz: Quiz, quizPos: Int, isLongPress: Boolean) -> Unit,
-    private val onQuizDeleteListener: (quiz: Quiz) -> Unit
+    private val onQuizDeleteListener: (quiz: Quiz) -> Unit,
+    private val onEmptyQuizListener: () -> Unit
 ) : RecyclerView.Adapter<AvailableQuizVH>() {
     private lateinit var binding: ItemQuizAvailableBinding
 
@@ -25,7 +26,7 @@ class QuizAvailableAdapter(
                 parent,
                 false
             )
-        return AvailableQuizVH(binding, onQuizClickListener, isAuthorMode, onQuizDeleteListener)
+        return AvailableQuizVH(binding)
     }
 
     override fun onBindViewHolder(holder: AvailableQuizVH, position: Int) {
@@ -35,10 +36,7 @@ class QuizAvailableAdapter(
     override fun getItemCount(): Int = quizList.size
 
     inner class AvailableQuizVH(
-        private val binding: ItemQuizAvailableBinding,
-        private val onQuizClickListener: (quiz: Quiz, quizPos: Int, isLongPress: Boolean) -> Unit,
-        private val isAuthorMode: Boolean,
-        private val onQuizDeleteListener: (quiz: Quiz) -> Unit
+        private val binding: ItemQuizAvailableBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -48,7 +46,7 @@ class QuizAvailableAdapter(
                 if (isAuthorMode) {
                     btnDeleteQuiz.show()
                     btnDeleteQuiz.setOnClickListener {
-                        deleteItem(position)
+                        deleteItem()
                         onQuizDeleteListener(quiz)
                     }
                 }
@@ -64,9 +62,10 @@ class QuizAvailableAdapter(
             }
         }
 
-        private fun deleteItem(quizPos: Int) {
-            quizList.removeAt(quizPos)
-            notifyItemRemoved(quizPos)
+        private fun deleteItem() {
+            quizList.removeAt(bindingAdapterPosition)
+            if (quizList.isEmpty()) onEmptyQuizListener()
+            notifyItemRemoved(bindingAdapterPosition)
         }
     }
 
@@ -74,6 +73,7 @@ class QuizAvailableAdapter(
     fun refreshList(availableQuizList: List<Quiz>) {
         quizList.clear()
         quizList.addAll(availableQuizList)
+        if (quizList.isEmpty()) onEmptyQuizListener()
         notifyDataSetChanged()
     }
 

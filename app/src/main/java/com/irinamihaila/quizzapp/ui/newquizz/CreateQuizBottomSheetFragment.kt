@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.FragmentCreateQuizBottomSheetBinding
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.utils.Constants.QUIZ_ID
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
+import com.irinamihaila.quizzapp.utils.hide
 import com.irinamihaila.quizzapp.utils.toEditable
 import com.irinamihaila.quizzapp.utils.value
 
@@ -46,6 +46,15 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews(questionToBeUpdated)
+        setupListeners()
+        setupObservers()
+    }
+
+    private fun setupObservers() {
+
+    }
+
+    private fun setupListeners() {
         with(binding) {
             btnAddQuestion.setOnClickListener {
                 val correctAnswer = getCorrectAnswer()
@@ -63,11 +72,16 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
                     viewModel.updateQuestion(it, newQuestion, quizId)
                 } ?: run {
                     getAdapter().addItem(newQuestion)
+                    hideNoQuestionsTextView()
                     viewModel.uploadQuestion(newQuestion, quizId)
                 }
                 dismiss()
             }
         }
+    }
+
+    private fun hideNoQuestionsTextView() {
+        (requireActivity() as CreateQuizActivity).binding.tvNoQuestions.hide()
     }
 
     private fun initViews(questionToBeUpdated: Question?) {
@@ -111,7 +125,7 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun getAdapter() =
-        (requireActivity().findViewById<RecyclerView>(R.id.rvNewQuestions).adapter as QuizItemAdapter)
+        ((requireActivity() as CreateQuizActivity).binding.rvNewQuestions.adapter as QuizItemAdapter)
 
     private fun getCorrectAnswer() =
         with(binding.layoutQuestionItem) {
