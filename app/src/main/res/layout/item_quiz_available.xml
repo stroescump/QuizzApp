@@ -9,9 +9,18 @@
     android:layout_marginEnd="@dimen/dimen_20dp"
     android:background="@drawable/bg_item_leaderboard">
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivQuiz"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_130dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/CustomShapeAppearanceImageView"
+        tools:src="@drawable/quiz_header_picture" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvQuizAvailableTitle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_20dp"
         android:layout_marginTop="@dimen/dimen_10dp"
@@ -19,23 +28,37 @@
         android:fontFamily="@font/coolvetica_rg"
         android:textColor="@color/white"
         android:textSize="@dimen/dimen_16sp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvQuizPercentage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivQuiz"
         tools:text="Example Title Quiz 1" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvQuizAvailableIsRedoEnabled"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_20dp"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_marginEnd="@dimen/dimen_20dp"
         android:layout_marginBottom="@dimen/dimen_10dp"
         android:fontFamily="@font/coolvetica_rg"
         android:textColor="@color/white"
         android:textSize="@dimen/dimen_16sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tvQuizAvailableTitle"
+        app:layout_constraintStart_toStartOf="@id/tvQuizAvailableTitle"
         app:layout_constraintTop_toBottomOf="@id/tvQuizAvailableTitle"
         tools:text="Redo available : false" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnDeleteQuiz"
+        style="@style/CustomButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:text="@string/delete"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivQuiz" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvQuizPercentage"
@@ -47,7 +70,7 @@
         android:textSize="@dimen/dimen_20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivQuiz"
         tools:text="78%" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

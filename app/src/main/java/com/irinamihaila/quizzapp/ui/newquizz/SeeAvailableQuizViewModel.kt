@@ -1,55 +1,69 @@
 package com.irinamihaila.quizzapp.ui.newquizz
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.irinamihaila.quizzapp.models.Quiz
+import com.irinamihaila.quizzapp.models.UserType
+import com.irinamihaila.quizzapp.repo.getAvailableQuizzes
+import com.irinamihaila.quizzapp.repo.getQuizDetails
+import com.irinamihaila.quizzapp.repo.getQuizzesCreated
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.AppResult
-import com.irinamihaila.quizzapp.utils.getAvailableQuizzes
-import com.irinamihaila.quizzapp.utils.getQuiz
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class SeeAvailableQuizViewModel(
 
 ) : ViewModel() {
     lateinit var quizCategory: QuizCategory
-    val errorLiveData: MutableLiveData<Throwable> = MutableLiveData()
+    lateinit var userType: UserType
     val quizzesFlow = MutableStateFlow<AppResult<Quiz>>(AppResult.Progress)
 
-    fun getQuizzesForUser(username: String) = run {
-        viewModelScope.launch(Dispatchers.IO) {
-            getAvailableQuizzes(username) {
-                when (it) {
-                    is AppResult.Error -> {
-                        errorLiveData.postValue(it.exception)
-                    }
-                    AppResult.Progress -> {}
-                    is AppResult.Success -> {
-                        it.successData?.onEach { quizDetails ->
-                            getQuiz(quizDetails.first, quizCategory.name) { quizResult ->
-                                when (quizResult) {
-                                    is AppResult.Error -> {
-                                        errorLiveData.postValue(quizResult.exception)
-                                    }
-                                    AppResult.Progress -> {}
-                                    is AppResult.Success -> {
-                                        quizResult.successData?.also { quiz ->
-                                            quizzesFlow.update {
-                                                AppResult.Success(
-                                                    quiz.apply { percentage = quizDetails.second }
-                                                )
-                                            }
-                                        }
+    fun getQuizzesForUser(
+        username: String,
+        userType: UserType,
+    ) =
+        when (userType) {
+            UserType.AUTHOR -> getQuizzesForAuthor(username)
+            UserType.PLAYER -> getQuizzesForPlayer(username)
+        }
+
+    private fun getQuizzesForAuthor(username: String) =
+        getQuizzesCreated(username, quizCategory) { res ->
+            quizzesFlow.update { res }
+        }
+
+    private fun getQuizzesForPlayer(username: String) = getAvailableQuizzes(username) { res ->
+        when (res) {
+            is AppResult.Error -> {
+                quizzesFlow.update { AppResult.Error(res.exception) }
+            }
+            AppResult.Progress -> {
+                quizzesFlow.update { AppResult.Progress }
+            }
+            is AppResult.Success -> {
+                res.successData?.onEach { quizDetails ->
+                    getQuizDetails(quizDetails.first, Quiz(), quizCategory.name) { quizResult ->
+                        when (quizResult) {
+                            is AppResult.Error -> {
+                                quizzesFlow.update { AppResult.Error(quizResult.exception) }
+                            }
+                            AppResult.Progress -> {
+                                quizzesFlow.update { AppResult.Progress }
+                            }
+                            is AppResult.Success -> {
+                                quizResult.successData?.also { quiz ->
+                                    quizzesFlow.update {
+                                        AppResult.Success(quiz.apply {
+                                            id = quizDetails.first
+                                            percentage = quizDetails.second
+                                        })
                                     }
                                 }
                             }
-                        } ?: errorLiveData.postValue(Throwable("An error occured. Please retry."))
+                        }
                     }
                 }
+                    ?: quizzesFlow.update { AppResult.Error(Throwable("Unable to find any quizzes. Try creating one first.")) }
             }
         }
     }

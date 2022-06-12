@@ -1,12 +1,9 @@
 package com.irinamihaila.quizzapp.ui.base
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
@@ -33,23 +30,27 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun AlertDialog.Builder.setButton(
+    fun AlertDialog.Builder.setButton(
         buttonHandlerType: AlertDialogButton,
-        buttonHandler: ((AlertDialog) -> DialogInterface.OnClickListener)?
-    ) {
+        buttonHandler: (() -> Unit)?
+    ): AlertDialog.Builder {
         if (buttonHandler.notNull()) {
             when (buttonHandlerType) {
                 is AlertDialogButton.PositiveButton -> setPositiveButton(
-                    getString(R.string.ok_button),
-                    buttonHandler!!(this.create())
-                )
+                    getString(R.string.ok_button)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                    buttonHandler!!()
+                }
                 is AlertDialogButton.NegativeButton -> setNegativeButton(
-                    getString(R.string.dismiss),
-                    buttonHandler!!(this.create())
-                )
+                    getString(R.string.dismiss)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                    buttonHandler!!()
+                }
             }
         }
+        return this
     }
 
     override fun onResume() {
@@ -75,8 +76,12 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun displayError(message: String? = null) {
+        hideProgress()
         createSnackbar(binding.root, message ?: getString(R.string.generic_error))
     }
+
+    fun displayInfo(message: String) =
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
 
     private fun createSnackbar(view: View, message: String) =
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
@@ -84,7 +89,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private fun createIndefiniteSnackbar(view: View, message: String) =
         Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE)
 
-    private fun ((AlertDialog) -> DialogInterface.OnClickListener)?.notNull(): Boolean {
+    private fun (() -> Unit)?.notNull(): Boolean {
         return this != null
     }
 

@@ -16,6 +16,7 @@ data class Quiz(
 
 @Parcelize
 data class Question(
+    var questionId: String? = "",
     val question: String? = "",
     val answer1: String? = "",
     val answer2: String? = "",

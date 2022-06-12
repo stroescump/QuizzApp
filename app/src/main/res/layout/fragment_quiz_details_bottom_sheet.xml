@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/dimen_30dp"
+    android:paddingBottom="@dimen/dimen_50dp"
+    tools:context=".ui.newquizz.QuizDetailsBottomSheetFragment">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etQuizName"
+        style="@style/CustomEditTextNormal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:hint="@string/quiz_name"
+        android:imeOptions="actionNext"
+        android:nextFocusDown="@id/etCreationDate"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etCreationDate"
+        style="@style/CustomEditTextNormal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:hint="@string/creation_date"
+        android:imeOptions="actionDone"
+        android:nextFocusDown="@id/switchIsRedo"
+        app:layout_constraintTop_toBottomOf="@id/etQuizName" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvIsRedoAvailable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:fontFamily="@font/coolvetica_rg"
+        android:text="@string/is_redo_available"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_20sp"
+        app:layout_constraintBottom_toBottomOf="@id/switchIsRedo"
+        app:layout_constraintStart_toStartOf="@id/etCreationDate"
+        app:layout_constraintTop_toTopOf="@id/switchIsRedo" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchIsRedo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        app:layout_constraintStart_toEndOf="@id/tvIsRedoAvailable"
+        app:layout_constraintTop_toBottomOf="@id/etCreationDate" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnUpdateQuiz"
+        style="@style/CustomButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:text="@string/update_quiz"
+        app:layout_constraintEnd_toEndOf="@id/etCreationDate"
+        app:layout_constraintStart_toStartOf="@id/etCreationDate"
+        app:layout_constraintTop_toBottomOf="@id/switchIsRedo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,10 +27,11 @@ class LoginActivity : BaseActivity() {
                 is AppResult.Success -> {
                     binding.also {
                         hideProgress()
-                        appResult.successData?.let { pair ->
+                        appResult.successData?.let { triple ->
                             SharedPrefsUtils(this).also {
-                                it.saveFullName(pair.first)
-                                it.saveUsername(pair.second)
+                                it.saveFullName(triple.first)
+                                it.saveUsername(triple.second)
+                                it.saveUserType(triple.third)
                             }
                         }
                         navigateTo(DashboardActivity::class.java, true)

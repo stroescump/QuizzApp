@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.utils.AppResult
-import com.irinamihaila.quizzapp.utils.getLeaderboardFirebase
-import com.irinamihaila.quizzapp.utils.getUserNode
+import com.irinamihaila.quizzapp.repo.getLeaderboardFirebase
+import com.irinamihaila.quizzapp.repo.getUserNode
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class TakeQuizViewModel : ViewModel() {

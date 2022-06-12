@@ -4,13 +4,14 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.ItemQuizAvailableBinding
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.ui.newquizz.QuizAvailableAdapter.AvailableQuizVH
 
 class QuizAvailableAdapter(
     private val quizList: MutableList<Quiz>,
-    private val onQuizClickListener: (quiz: Quiz) -> Unit
+    private val onQuizClickListener: (quiz: Quiz, isLongPress: Boolean) -> Unit
 ) : RecyclerView.Adapter<AvailableQuizVH>() {
     private lateinit var binding: ItemQuizAvailableBinding
 
@@ -32,14 +33,19 @@ class QuizAvailableAdapter(
 
     class AvailableQuizVH(
         private val binding: ItemQuizAvailableBinding,
-        private val onQuizClickListener: (quiz: Quiz) -> Unit
+        private val onQuizClickListener: (quiz: Quiz, isLongPress: Boolean) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
         fun bind(quiz: Quiz) {
             with(binding) {
-                root.setOnClickListener { onQuizClickListener(quiz) }
+                root.setOnLongClickListener {
+                    onQuizClickListener(quiz, true)
+                    true
+                }
+                root.setOnClickListener { onQuizClickListener(quiz, false) }
+                ivQuiz.setImageResource(R.drawable.quiz_header_picture)
                 tvQuizAvailableTitle.text = quiz.name
                 quiz.percentage?.let { tvQuizPercentage.text = "$it%" }
                 tvQuizAvailableIsRedoEnabled.text = "Redo available: ${quiz.isRedo}"
@@ -54,7 +60,6 @@ class QuizAvailableAdapter(
         notifyDataSetChanged()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun addToList(availableQuiz: Quiz) {
         quizList.add(availableQuiz)
         notifyItemInserted(quizList.size)
