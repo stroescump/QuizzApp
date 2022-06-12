@@ -18,10 +18,18 @@ fun deleteQuizFromUsers(quizId: String, handler: (AppResult<Nothing>) -> Unit) =
         it.children.onEach { user ->
             val availableQuizzes = user.child("availableQuizzes")
             if (availableQuizzes.exists() && availableQuizzes.hasChildren()) {
-                availableQuizzes.children.first { quiz -> quiz.hasChild(quizId) }.ref.removeValue()
-                    .addOnSuccessListener {
-                        handler(AppResult.Success(null))
-                    }.addOnFailureListener { e ->
+                availableQuizzes.children.firstOrNull { quiz -> quiz.key == quizId }
+                    ?.ref?.removeValue()
+                    ?.addOnSuccessListener {
+                        getQuizFromDB(quizId).removeValue()
+                            .addOnSuccessListener {
+                                handler(AppResult.Success(null))
+                            }
+                            .addOnFailureListener { e ->
+                                handler(AppResult.Error(e))
+                            }
+
+                    }?.addOnFailureListener { e ->
                         handler(AppResult.Error(e))
                     }
             }

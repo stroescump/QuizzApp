@@ -51,16 +51,41 @@ class SeeAvailableQuizActivity : BaseActivity() {
                 QuizAvailableAdapter(
                     viewModel.userType == AUTHOR,
                     mutableListOf(),
-                    { quiz, isLongPress ->
-                        when (isLongPress) {
-                            true -> handleLongClickQuiz(quiz)
-                            false -> handleClickQuiz(quiz)
-                        }
-                    },
-                    { quiz ->
-                        viewModel.deleteQuiz(quiz)
-                    }
+                    handleOnQuizClick(),
+                    handleOnQuizDelete()
                 )
+        }
+    }
+
+    override fun setupObservers() {
+        lifecycleScope.launchWhenResumed {
+            launch {
+                viewModel.quizzesFlow.collect { res ->
+                    when (res) {
+                        is AppResult.Error -> handleErrors(res)
+                        AppResult.Progress -> showProgress()
+                        is AppResult.Success -> {
+                            hideProgress()
+                            res.successData?.let { quiz ->
+                                getQuizAdapter().addToList(quiz)
+                            }
+                        }
+                    }
+                }
+            }
+
+            launch {
+                viewModel.uiEvents.collect { res ->
+                    when (res) {
+                        is AppResult.Error -> handleErrors(res)
+                        AppResult.Progress -> showProgress()
+                        is AppResult.Success -> {
+                            hideProgress()
+                            displayInfo(getString(R.string.delete_successful))
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -81,40 +106,20 @@ class SeeAvailableQuizActivity : BaseActivity() {
         } else displayError(getString(R.string.error_take_quiz_once))
     }
 
-    private fun handleLongClickQuiz(quiz: Quiz) {
-        QuizDetailsBottomSheetFragment.newInstance(quiz)
+    private fun handleLongClickQuiz(quiz: Quiz, quizPos: Int) {
+        QuizDetailsBottomSheetFragment.newInstance(quiz, quizPos)
             .show(supportFragmentManager, QuizDetailsBottomSheetFragment::class.java.simpleName)
     }
 
-    override fun setupObservers() {
-        lifecycleScope.launch {
-            viewModel.quizzesFlow.collect { res ->
-                when (res) {
-                    is AppResult.Error -> handleErrors(res)
-                    AppResult.Progress -> showProgress()
-                    is AppResult.Success -> {
-                        hideProgress()
-                        res.successData?.let { quiz ->
-                            getQuizAdapter().addToList(quiz)
-                        }
-                    }
-                }
-            }
+    private fun handleOnQuizClick() = { quiz: Quiz, quizPos: Int, isLongPress: Boolean ->
+        when (isLongPress) {
+            true -> handleLongClickQuiz(quiz, quizPos)
+            false -> handleClickQuiz(quiz)
         }
+    }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.uiEvents.collect { res ->
-                when (res) {
-                    is AppResult.Error -> handleErrors(res)
-                    AppResult.Progress -> showProgress()
-                    is AppResult.Success -> {
-                        hideProgress()
-                        displayInfo(getString(R.string.delete_successful))
-                    }
-                }
-            }
-        }
-
+    private fun handleOnQuizDelete() = { quiz: Quiz ->
+        viewModel.deleteQuiz(quiz)
     }
 
     private fun handleErrors(res: AppResult.Error<Quiz>) {

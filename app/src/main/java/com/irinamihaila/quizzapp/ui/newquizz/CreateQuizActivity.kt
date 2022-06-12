@@ -16,6 +16,9 @@ import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CreateQuizActivity : BaseActivity() {
     override val binding by viewBinding(ActivityCreateQuizBinding::inflate)
@@ -35,7 +38,9 @@ class CreateQuizActivity : BaseActivity() {
             if (isEditMode.not() || isEmptyQuiz.not()) {
                 val quizCategory = it.getParcelable<QuizCategory>(Constants.QUIZ_CATEGORY)
                 viewModel.createQuiz(
-                    quizCategory ?: throw IllegalStateException("Must have a valid quiz category")
+                    quizCategory ?: throw IllegalStateException("Must have a valid quiz category"),
+                    SimpleDateFormat.getDateInstance(DateFormat.SHORT)
+                        .format(Calendar.getInstance().time)
                 )
             } else {
                 viewModel.currentQuizId.value?.let { id -> viewModel.getQuestionsFromSelectedQuiz(id) }

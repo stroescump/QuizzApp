@@ -13,7 +13,7 @@ import com.irinamihaila.quizzapp.utils.show
 class QuizAvailableAdapter(
     private val isAuthorMode: Boolean,
     private val quizList: MutableList<Quiz>,
-    private val onQuizClickListener: (quiz: Quiz, isLongPress: Boolean) -> Unit,
+    private val onQuizClickListener: (quiz: Quiz, quizPos: Int, isLongPress: Boolean) -> Unit,
     private val onQuizDeleteListener: (quiz: Quiz) -> Unit
 ) : RecyclerView.Adapter<AvailableQuizVH>() {
     private lateinit var binding: ItemQuizAvailableBinding
@@ -29,36 +29,44 @@ class QuizAvailableAdapter(
     }
 
     override fun onBindViewHolder(holder: AvailableQuizVH, position: Int) {
-        holder.bind(quizList[position])
+        holder.bind(quizList[position], position)
     }
 
     override fun getItemCount(): Int = quizList.size
 
-    class AvailableQuizVH(
+    inner class AvailableQuizVH(
         private val binding: ItemQuizAvailableBinding,
-        private val onQuizClickListener: (quiz: Quiz, isLongPress: Boolean) -> Unit,
+        private val onQuizClickListener: (quiz: Quiz, quizPos: Int, isLongPress: Boolean) -> Unit,
         private val isAuthorMode: Boolean,
         private val onQuizDeleteListener: (quiz: Quiz) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
-        fun bind(quiz: Quiz) {
+        fun bind(quiz: Quiz, position: Int) {
             with(binding) {
                 if (isAuthorMode) {
                     btnDeleteQuiz.show()
-                    btnDeleteQuiz.setOnClickListener { onQuizDeleteListener(quiz) }
+                    btnDeleteQuiz.setOnClickListener {
+                        deleteItem(position)
+                        onQuizDeleteListener(quiz)
+                    }
                 }
                 root.setOnLongClickListener {
-                    onQuizClickListener(quiz, true)
+                    onQuizClickListener(quiz, position, true)
                     true
                 }
-                root.setOnClickListener { onQuizClickListener(quiz, false) }
+                root.setOnClickListener { onQuizClickListener(quiz, position, false) }
                 ivQuiz.setImageResource(R.drawable.quiz_header_picture)
                 tvQuizAvailableTitle.text = quiz.name
                 quiz.percentage?.let { tvQuizPercentage.text = "$it%" }
                 tvQuizAvailableIsRedoEnabled.text = "Redo available: ${quiz.isRedo}"
             }
+        }
+
+        private fun deleteItem(quizPos: Int) {
+            quizList.removeAt(quizPos)
+            notifyItemRemoved(quizPos)
         }
     }
 
@@ -72,5 +80,10 @@ class QuizAvailableAdapter(
     fun addToList(availableQuiz: Quiz) {
         quizList.add(availableQuiz)
         notifyItemInserted(quizList.size)
+    }
+
+    fun updateItem(quiz: Quiz, quizPos: Int) {
+        quizList[quizPos] = quiz
+        notifyItemChanged(quizPos)
     }
 }
