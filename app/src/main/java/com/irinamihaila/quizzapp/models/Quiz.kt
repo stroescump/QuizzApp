@@ -9,9 +9,11 @@ data class Quiz(
     var name: String? = "",
     var category: String? = "",
     var issuedDate: String? = "",
+    var creator: String? = "",
     var percentage: Int? = null,
     var isRedo: Boolean? = false,
-    var questions: List<Question?>? = emptyList()
+    var questions: List<Question>? = emptyList(),
+    var feedback: List<Feedback>? = emptyList()
 ) : Parcelable
 
 @Parcelize
@@ -23,4 +25,9 @@ data class Question(
     val answer3: String? = "",
     val answer4: String? = "",
     val correctAnswer: String? = ""
+) : Parcelable
+
+@Parcelize
+data class Feedback(
+    var feedbackMessage: String? = ""
 ) : Parcelable

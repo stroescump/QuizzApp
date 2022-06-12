@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizzApp">
         <activity
+            android:name=".ui.feedback.FeedbackActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.newquizz.TakeQuizActivity"
             android:exported="false" />
         <activity

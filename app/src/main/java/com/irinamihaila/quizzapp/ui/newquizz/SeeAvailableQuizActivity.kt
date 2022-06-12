@@ -10,11 +10,14 @@ import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.models.UserType.*
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.DashboardActivity
+import com.irinamihaila.quizzapp.ui.feedback.FeedbackActivity
 import com.irinamihaila.quizzapp.utils.*
 import com.irinamihaila.quizzapp.utils.Constants.IS_EDIT
 import com.irinamihaila.quizzapp.utils.Constants.IS_NEW_QUIZ
+import com.irinamihaila.quizzapp.utils.Constants.QUIZ
 import com.irinamihaila.quizzapp.utils.Constants.QUIZ_CATEGORY
 import com.irinamihaila.quizzapp.utils.Constants.QUIZ_ID
+import com.irinamihaila.quizzapp.utils.Constants.USER_TYPE
 import kotlinx.coroutines.launch
 
 class SeeAvailableQuizActivity : BaseActivity() {
@@ -57,15 +60,26 @@ class SeeAvailableQuizActivity : BaseActivity() {
 
     override fun initViews() {
         with(binding) {
+            if(viewModel.userType == PLAYER) {
+                btnAddMore.hide()
+            }
             rvAvailableQuizzez.adapter =
                 QuizAvailableAdapter(
                     viewModel.userType == AUTHOR,
                     mutableListOf(),
                     handleOnQuizClick(),
                     handleOnQuizDelete(),
-                    handleOnQuizEmpty()
+                    handleOnQuizEmpty(),
+                    handleOnFeedbackClickListener()
                 )
         }
+    }
+
+    private fun handleOnFeedbackClickListener() = { quiz: Quiz ->
+        navigateTo(FeedbackActivity::class.java, isFinishActivity = true, extras = Bundle().also {
+            it.putParcelable(USER_TYPE, viewModel.userType)
+            it.putParcelable(QUIZ, quiz)
+        })
     }
 
     override fun setupObservers() {
