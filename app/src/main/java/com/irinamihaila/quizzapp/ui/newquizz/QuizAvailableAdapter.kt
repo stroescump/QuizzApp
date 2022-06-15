@@ -3,6 +3,7 @@ package com.irinamihaila.quizzapp.ui.newquizz
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.ItemQuizAvailableBinding
@@ -15,7 +16,8 @@ class QuizAvailableAdapter(
     private val quizList: MutableList<Quiz>,
     private val onQuizClickListener: (quiz: Quiz, quizPos: Int, isLongPress: Boolean) -> Unit,
     private val onQuizDeleteListener: (quiz: Quiz) -> Unit,
-    private val onEmptyQuizListener: () -> Unit
+    private val onEmptyQuizListener: () -> Unit,
+    private val onFeedbackClickListener: (quiz: Quiz) -> Unit
 ) : RecyclerView.Adapter<AvailableQuizVH>() {
     private lateinit var binding: ItemQuizAvailableBinding
 
@@ -43,11 +45,26 @@ class QuizAvailableAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(quiz: Quiz, position: Int) {
             with(binding) {
+                btnSeeFeedback.show()
+                btnSeeFeedback.setOnClickListener {
+                    onFeedbackClickListener(quiz)
+                }
                 if (isAuthorMode) {
                     btnDeleteQuiz.show()
                     btnDeleteQuiz.setOnClickListener {
                         deleteItem()
                         onQuizDeleteListener(quiz)
+                    }
+                } else {
+                    ConstraintSet().apply {
+                        clone(root)
+                        connect(
+                            btnSeeFeedback.id,
+                            ConstraintSet.END,
+                            tvQuizPercentage.id,
+                            ConstraintSet.START
+                        )
+                        applyTo(root)
                     }
                 }
                 root.setOnLongClickListener {

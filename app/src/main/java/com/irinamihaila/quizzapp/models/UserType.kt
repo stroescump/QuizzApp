@@ -1,5 +1,9 @@
 package com.irinamihaila.quizzapp.models
 
-enum class UserType {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class UserType : Parcelable {
     AUTHOR, PLAYER
 }

@@ -45,29 +45,30 @@ class SeeAvailableQuizViewModel(
                 quizzesFlow.update { AppResult.Progress }
             }
             is AppResult.Success -> {
-                res.successData?.onEach { quizDetails ->
-                    getQuizDetails(quizDetails.first, Quiz(), quizCategory.name) { quizResult ->
-                        when (quizResult) {
+                res.successData?.onEach { quiz ->
+                    getQuizDetails(quiz.first, Quiz().apply {
+                        id = quiz.first
+                        percentage = quiz.second
+                        category = quizCategory.name
+                    }, quizCategory.name) { quizExtraDetails ->
+                        when (quizExtraDetails) {
                             is AppResult.Error -> {
-                                quizzesFlow.update { AppResult.Error(quizResult.exception) }
+                                quizzesFlow.update { AppResult.Error(quizExtraDetails.exception) }
                             }
                             AppResult.Progress -> {
                                 quizzesFlow.update { AppResult.Progress }
                             }
                             is AppResult.Success -> {
-                                quizResult.successData?.also { quiz ->
+                                quizExtraDetails.successData?.also { details ->
                                     quizzesFlow.update {
-                                        AppResult.Success(quiz.apply {
-                                            id = quizDetails.first
-                                            percentage = quizDetails.second
-                                        })
+                                        AppResult.Success(details)
                                     }
                                 }
                             }
                         }
                     }
                 }
-                    ?: quizzesFlow.update { AppResult.Error(Throwable("Unable to find any quizzes. Try creating one first.")) }
+                    ?: quizzesFlow.update { AppResult.Error(Throwable("Unable to find any quizzes. Join one now to taste your first challenge.")) }
             }
         }
     }

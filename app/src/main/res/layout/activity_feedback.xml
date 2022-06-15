@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.feedback.FeedbackActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_feedback" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etFeedback"
+        style="@style/CustomEditTextDark"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/dimen_20dp"
+        android:gravity="top|center"
+        android:hint="@string/here_you_can_share_your_feedback_with_author_of_this_quiz"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:visibility="gone"
+        app:layout_constraintHeight_percent="0.8"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSendFeedback"
+        style="@style/CustomButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:text="@string/send_feedback"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etFeedback"
+        app:layout_constraintWidth_percent="0.75" />
+
+    <include
+        android:id="@+id/layoutProgress"
+        layout="@layout/layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

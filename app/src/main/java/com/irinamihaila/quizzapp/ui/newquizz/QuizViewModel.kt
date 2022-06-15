@@ -10,7 +10,6 @@ import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.repo.createNewQuiz
 import com.irinamihaila.quizzapp.repo.getQuizFromDB
 import com.irinamihaila.quizzapp.repo.getQuizzesFromUsername
-import com.irinamihaila.quizzapp.repo.getUserNode
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.AppResult
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
@@ -46,6 +45,10 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
     fun createQuiz(quizCategory: QuizCategory, currentTime: String) {
         val quizDB = createNewQuiz().apply {
             child("category").setValue(quizCategory.name)
+            child("issuedDate").setValue(currentTime)
+            child("name").setValue("New quiz - $currentTime")
+            child("redo").setValue(false)
+            child("id").setValue(this.key!!)
         }
         sharedPrefs.getUsername()?.let {
             getQuizzesFromUsername(it).get()
@@ -70,29 +73,24 @@ class QuizViewModel(private val sharedPrefs: SharedPrefsUtils) : ViewModel() {
             .addOnCompleteListener {
                 usernameQuizzes.ref.child(quizKey).apply {
                     child("category").setValue(category)
-                    child("issuedDate").setValue(currentTime)
-                    child("name").setValue("New quiz - $currentTime")
                 }
             }
     }
 
     fun updateQuiz(quiz: Quiz) {
-        sharedPrefs.getUsername()
-            ?.let { user ->
-                quiz.id?.let { id ->
-                    getUserNode(user).child("availableQuizzes").child(id).updateChildren(
-                        mapOf(
-                            "name" to quiz.name,
-                            "issuedDate" to quiz.issuedDate,
-                            "redo" to quiz.isRedo
-                        )
-                    ) { error, _ ->
-                        error?.let { e ->
-                            uiState.update { false to e.message }
-                        } ?: uiState.update { true to null }
-                    }
-                } ?: throw IllegalArgumentException("Every quiz must have an ID.")
-            } ?: throw IllegalArgumentException("There is no username stored in SharedPreferences.")
+        quiz.id?.let { id ->
+            getQuizFromDB(id).updateChildren(
+                mapOf(
+                    "name" to quiz.name,
+                    "issuedDate" to quiz.issuedDate,
+                    "redo" to quiz.isRedo
+                )
+            ) { error, _ ->
+                error?.let { e ->
+                    uiState.update { false to e.message }
+                } ?: uiState.update { true to null }
+            }
+        } ?: throw IllegalArgumentException("Every quiz must have an ID.")
     }
 
     fun getQuestionsFromSelectedQuiz(quizId: String) {

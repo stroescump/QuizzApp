@@ -36,7 +36,8 @@ class LeaderboardItemAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(playerDetails: Pair<String, Int>, position: Int) {
             with(binding) {
-                tvPlayerDetails.text = "${position.inc()}. ${playerDetails.first} ${playerDetails.second}%"
+                tvPlayerDetails.text =
+                    "${position.inc()}. ${playerDetails.first} ${playerDetails.second}%"
             }
         }
     }

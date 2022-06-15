@@ -41,4 +41,9 @@
     <string name="would_you_like_to_create_quiz">Would you like to create a quiz?</string>
     <string name="add_some_quizzes_to_get_the_fun_started">Add some quizzes to get the fun started.</string>
     <string name="unleash_your_creativity_add_some_questions_to_this_quiz">Unleash your creativity.\nAdd some questions to this quiz.</string>
+    <string name="feedback">Feedback</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="here_you_can_share_your_feedback_with_author_of_this_quiz">Here you can share your feedback with author of this quiz.</string>
+    <string name="feedback_sent_success">Feedback sent successfully!</string>
+    <string name="lorem_ipsum">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
 </resources>

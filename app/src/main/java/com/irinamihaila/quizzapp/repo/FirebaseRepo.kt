@@ -3,9 +3,11 @@ package com.irinamihaila.quizzapp.repo
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.irinamihaila.quizzapp.models.Feedback
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.models.QuizUser
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
@@ -114,7 +116,7 @@ fun getAvailableQuizzes(
                         }
                     }
                     handler(AppResult.Success(availableQuizList))
-                }
+                } else handler(AppResult.Error(Throwable("Unable to find any quizzes. Join one now to taste your first challenge.")))
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -167,9 +169,57 @@ fun getQuizDetails(
                 val quizRef = snapshot.child(id)
                 if (quizRef.exists() && matchByCategory(quizRef, category)) {
                     val quizFull = quizInitialDetails.apply {
-                        questions = quizRef.getValue(Quiz::class.java)?.questions
+                        quizRef.getValue(Quiz::class.java)?.let { quizDb ->
+                            this.id = id
+                            isRedo = quizDb.isRedo
+                            name = quizDb.name
+                            issuedDate = quizDb.issuedDate
+                            questions = quizDb.questions
+                            feedback = quizDb.feedback
+                        }
                     }
                     handler(AppResult.Success(quizFull))
+                } else if (quizRef.exists().not()) {
+                    Log.e("FirebaseRepo.kt", "getQuizDetails: $quizRef does not exist. ")
+                    throw IllegalArgumentException("This node does not exist in QuizDB ${quizRef.key}")
+                } else throwNoElementException()
+            } else {
+                throwNoElementException()
+            }
+        } catch (e: NoSuchElementException) {
+            throwNoElementException()
+        }
+    }.addOnFailureListener { handler(AppResult.Error(it)) }
+
+fun getFeedbackForQuiz(quiz: Quiz, handler: (quiz: AppResult<Quiz>) -> Unit) =
+    getQuizDetails(quiz.id!!, quiz, quiz.category!!) {
+        handler(it)
+    }
+
+fun sendFeedbackFirebase(feedback: String, quiz: Quiz, handler: (AppResult<Nothing>) -> Unit) =
+    Firebase.database.getReference("quizzes").get().addOnSuccessListener { snapshot ->
+        fun throwNoElementException() {
+            handler(
+                AppResult.Error(
+                    NoSuchElementException(
+                        "Unable to find any feedback. " +
+                                "Please share your quiz with as many players to increase your feedback span."
+                    )
+                )
+            )
+        }
+        try {
+            if (snapshot.hasChildren()) {
+                val quizRef = snapshot.child(quiz.id!!)
+                if (quizRef.exists() && matchByCategory(quizRef, quiz.category!!)) {
+                    quizRef.child("feedback").apply {
+                        val feedbackList = getValue(object :
+                            GenericTypeIndicator<List<Feedback>>() {})?.toMutableList()?.apply {
+                            add(Feedback(feedbackMessage = feedback))
+                        } ?: listOf(Feedback(feedbackMessage = feedback))
+                        ref.setValue(feedbackList)
+                        handler(AppResult.Success(null))
+                    }
                 } else if (quizRef.exists().not()) {
                     Log.e("FirebaseRepo.kt", "getQuizDetails: $quizRef does not exist. ")
                     throw IllegalArgumentException("This node does not exist in QuizDB - ${quizRef.key}")
@@ -181,6 +231,5 @@ fun getQuizDetails(
             throwNoElementException()
         }
     }.addOnFailureListener { handler(AppResult.Error(it)) }
-
 
 fun createNewQuiz() = Firebase.database.reference.child("quizzes").push()
