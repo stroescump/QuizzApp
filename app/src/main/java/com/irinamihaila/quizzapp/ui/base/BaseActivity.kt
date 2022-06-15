@@ -40,13 +40,13 @@ abstract class BaseActivity : AppCompatActivity() {
                     getString(R.string.ok_button)
                 ) { dialog, _ ->
                     dialog.dismiss()
-                    buttonHandler!!()
+                    buttonHandler?.invoke()
                 }
                 is AlertDialogButton.NegativeButton -> setNegativeButton(
                     getString(R.string.dismiss)
                 ) { dialog, _ ->
                     dialog.dismiss()
-                    buttonHandler!!()
+                    buttonHandler?.invoke()
                 }
             }
         }

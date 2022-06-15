@@ -60,6 +60,7 @@ class RegisterActivity : BaseActivity() {
                         SharedPrefsUtils(this).also {
                             it.saveFullName(pair.first)
                             it.saveUsername(pair.second)
+                            it.saveUserType(pair.third)
                         }
                     }
                     navigateTo(DashboardActivity::class.java, true)

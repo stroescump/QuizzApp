@@ -31,6 +31,17 @@
         app:layout_constraintTop_toBottomOf="@id/tvYouDid"
         tools:text="86%\nSee how your colleagues did" />
 
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnCloseSheet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:background="@null"
+        android:src="@drawable/close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLeaderboard"
         android:layout_width="match_parent"

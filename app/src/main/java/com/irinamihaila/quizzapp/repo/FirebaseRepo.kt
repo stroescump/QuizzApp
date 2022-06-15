@@ -87,6 +87,8 @@ fun getQuizzesFromUsername(username: String) =
 fun getQuizFromDB(quizId: String) =
     Firebase.database.getReference("quizzes/$quizId")
 
+fun getQuizDBRef() = Firebase.database.getReference("quizzes")
+
 fun createUserNode(quizUser: QuizUser) =
     Firebase.database.getReference("users/${quizUser.username}").setValue(quizUser)
 
@@ -98,10 +100,7 @@ private fun matchByCategory(quiz: DataSnapshot?, category: String) = run {
     return@run false
 }
 
-private fun matchById(it: DataSnapshot, id: String) =
-    it.key!! == id
-
-fun getAvailableQuizzes(
+fun getQuizzesCompleted(
     username: String,
     handler: (quiz: AppResult<List<Pair<String, Int?>>>) -> Unit
 ) =
@@ -231,5 +230,41 @@ fun sendFeedbackFirebase(feedback: String, quiz: Quiz, handler: (AppResult<Nothi
             throwNoElementException()
         }
     }.addOnFailureListener { handler(AppResult.Error(it)) }
+
+fun getAllQuizzes(
+    category: String,
+    handler: (quiz: AppResult<List<Quiz>>) -> Unit
+) =
+    Firebase.database.getReference("quizzes").get().addOnSuccessListener { snapshot ->
+        fun throwNoElementException() {
+            handler(AppResult.Error(NoSuchElementException("Unable to find any quizzes. Try creating one first.")))
+        }
+        try {
+            if (snapshot.hasChildren()) {
+                val quizzesList = mutableListOf<Quiz>()
+                snapshot.children
+                    .filter { it.child("category").value == category }
+                    .onEach {
+                        it.getValue(Quiz::class.java)?.let { quiz -> quizzesList.add(quiz) }
+                    }
+                handler(AppResult.Success(quizzesList))
+            } else {
+                throwNoElementException()
+            }
+        } catch (e: NoSuchElementException) {
+            throwNoElementException()
+        }
+    }.addOnFailureListener { handler(AppResult.Error(it)) }
+
+fun getUserDetails(username: String, handler: (quiz: AppResult<Pair<String?, String?>>) -> Unit) {
+    getUserNode(username).get().addOnSuccessListener {
+        val userType = it.child("userType").getValue(String::class.java)
+        val fullName = it.child("fullName").getValue(String::class.java)
+        handler(AppResult.Success(userType to fullName))
+    }.addOnFailureListener {
+        AppResult.Error<Pair<String, String>>(it)
+    }
+}
+
 
 fun createNewQuiz() = Firebase.database.reference.child("quizzes").push()

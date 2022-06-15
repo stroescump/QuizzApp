@@ -30,6 +30,7 @@ class LeaderboardBottomSheetFragment : BottomSheetDialogFragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupListeners()
         setupObservers()
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.quiz.id?.let { viewModel.getLeaderboard(it) }
@@ -40,6 +41,10 @@ class LeaderboardBottomSheetFragment : BottomSheetDialogFragment() {
                 getPercentage()
             tvPercentage.text = "$percentage%\nSee how your \ncolleagues did"
         }
+    }
+
+    private fun setupListeners() {
+        binding.btnCloseSheet.setOnClickListener { dismiss() }
     }
 
     private fun setupObservers() {

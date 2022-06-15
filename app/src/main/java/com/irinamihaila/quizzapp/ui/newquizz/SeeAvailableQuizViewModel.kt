@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.irinamihaila.quizzapp.models.Quiz
 import com.irinamihaila.quizzapp.models.UserType
 import com.irinamihaila.quizzapp.repo.deleteQuizFromUsers
-import com.irinamihaila.quizzapp.repo.getAvailableQuizzes
-import com.irinamihaila.quizzapp.repo.getQuizDetails
+import com.irinamihaila.quizzapp.repo.getAllQuizzes
+import com.irinamihaila.quizzapp.repo.getQuizzesCompleted
 import com.irinamihaila.quizzapp.repo.getQuizzesCreated
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.utils.AppResult
@@ -36,42 +36,46 @@ class SeeAvailableQuizViewModel(
             quizzesFlow.update { res }
         }
 
-    private fun getQuizzesForPlayer(username: String) = getAvailableQuizzes(username) { res ->
-        when (res) {
-            is AppResult.Error -> {
-                quizzesFlow.update { AppResult.Error(res.exception) }
-            }
-            AppResult.Progress -> {
-                quizzesFlow.update { AppResult.Progress }
-            }
-            is AppResult.Success -> {
-                res.successData?.onEach { quiz ->
-                    getQuizDetails(quiz.first, Quiz().apply {
-                        id = quiz.first
-                        percentage = quiz.second
-                        category = quizCategory.name
-                    }, quizCategory.name) { quizExtraDetails ->
-                        when (quizExtraDetails) {
-                            is AppResult.Error -> {
-                                quizzesFlow.update { AppResult.Error(quizExtraDetails.exception) }
-                            }
-                            AppResult.Progress -> {
-                                quizzesFlow.update { AppResult.Progress }
-                            }
-                            is AppResult.Success -> {
-                                quizExtraDetails.successData?.also { details ->
-                                    quizzesFlow.update {
-                                        AppResult.Success(details)
+    private fun getQuizzesForPlayer(username: String) =
+        getAllQuizzes(quizCategory.name) { allQuizzes ->
+            when (allQuizzes) {
+                is AppResult.Error -> {
+                    quizzesFlow.update { AppResult.Error(allQuizzes.exception) }
+                }
+                AppResult.Progress -> {
+                    quizzesFlow.update { AppResult.Progress }
+                }
+                is AppResult.Success -> {
+                    allQuizzes.successData?.let { quizList ->
+                        quizList.toMutableList().also { allQuizzesMutable ->
+                            if (allQuizzesMutable.isNotEmpty()) {
+                                getQuizzesCompleted(username) { quizzesCompleted ->
+                                    when (quizzesCompleted) {
+                                        is AppResult.Error -> quizzesFlow.update {
+                                            AppResult.Error(quizzesCompleted.exception)
+                                        }
+                                        AppResult.Progress -> quizzesFlow.update { AppResult.Progress }
+                                        is AppResult.Success -> {
+                                            quizzesCompleted.successData?.onEach { quiz ->
+                                                allQuizzesMutable.firstOrNull { it.id == quiz.first }
+                                                    ?.apply { percentage = quiz.second }
+                                            }
+                                            allQuizzesMutable.onEach { quiz ->
+                                                quizzesFlow.update {
+                                                    AppResult.Success(
+                                                        quiz
+                                                    )
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                            }
+                            } else quizzesFlow.update { AppResult.Error(Throwable("Unable to find any quizzes. Join one now to taste your first challenge.")) }
                         }
                     }
                 }
-                    ?: quizzesFlow.update { AppResult.Error(Throwable("Unable to find any quizzes. Join one now to taste your first challenge.")) }
             }
         }
-    }
 
     fun deleteQuiz(quiz: Quiz) {
         deleteQuizFromUsers(quiz.id!!) { res ->

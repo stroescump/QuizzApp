@@ -2,11 +2,13 @@ package com.irinamihaila.quizzapp.ui.dashboard
 
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.appcompat.app.AlertDialog
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.ActivityDashboardBinding
 import com.irinamihaila.quizzapp.models.UserType
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory.*
+import com.irinamihaila.quizzapp.ui.login.LoginActivity
 import com.irinamihaila.quizzapp.ui.newquizz.SeeAvailableQuizActivity
 import com.irinamihaila.quizzapp.utils.Constants
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
@@ -27,6 +29,16 @@ class DashboardActivity : BaseActivity() {
                 dashboardItem5 to QuizOther
             ).onEach { pair ->
                 pair.first.setOnClickListener { provideQuizClickListener(pair.second) }
+            }
+            containerProfile.ivProfile.setOnClickListener {
+                AlertDialog.Builder(this@DashboardActivity)
+                    .setMessage(getString(R.string.logout_message))
+                    .setButton(AlertDialogButton.PositiveButton) {
+                        navigateTo(LoginActivity::class.java, true)
+                    }
+                    .setButton(AlertDialogButton.NegativeButton) {}
+                    .create()
+                    .show()
             }
         }
     }
