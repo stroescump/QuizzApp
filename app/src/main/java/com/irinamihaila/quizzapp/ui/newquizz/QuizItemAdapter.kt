@@ -15,7 +15,7 @@ import okhttp3.internal.toImmutableList
 class QuizItemAdapter(
     private val questionList: MutableList<Question>,
     private val isCreateMode: Boolean = true,
-    val onQuestionClick: (question: Question, position: Int) -> Unit
+    private val onQuestionClick: (question: Question, position: Int) -> Unit
 ) : RecyclerView.Adapter<CreateQuizVH>() {
     private lateinit var binding: LayoutQuestionItemBinding
 

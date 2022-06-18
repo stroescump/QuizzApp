@@ -51,12 +51,12 @@ class LoginActivity : BaseActivity() {
                 navigateTo(RegisterActivity::class.java)
             }
         }
-        binding.btnLogin.performClick()
+//        binding.btnLogin.performClick()
     }
 
     override fun initViews() {
         binding.btnRegister.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-        binding.etUsername.text = Editable.Factory().newEditable("a")
-        binding.etPassword.text = Editable.Factory().newEditable("a")
+//        binding.etUsername.text = Editable.Factory().newEditable("a")
+//        binding.etPassword.text = Editable.Factory().newEditable("a")
     }
 }

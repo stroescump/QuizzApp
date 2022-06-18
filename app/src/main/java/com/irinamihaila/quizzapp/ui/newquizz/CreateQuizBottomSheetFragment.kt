@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.FragmentCreateQuizBottomSheetBinding
 import com.irinamihaila.quizzapp.models.Question
@@ -57,25 +58,38 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
     private fun setupListeners() {
         with(binding) {
             btnAddQuestion.setOnClickListener {
-                val correctAnswer = getCorrectAnswer()
-                val newQuestion = Question(
-                    question = layoutQuestionItem.etNewQuestion.value(),
-                    answer1 = layoutQuestionItem.etAnswer1.value(),
-                    answer2 = layoutQuestionItem.etAnswer2.value(),
-                    answer3 = layoutQuestionItem.etAnswer3.value(),
-                    answer4 = layoutQuestionItem.etAnswer4.value(),
-                    correctAnswer = correctAnswer
-                )
+                try {
+                    val correctAnswer = getCorrectAnswer()
+                    val newQuestion = Question(
+                        question = layoutQuestionItem.etNewQuestion.value(),
+                        answer1 = layoutQuestionItem.etAnswer1.value(),
+                        answer2 = layoutQuestionItem.etAnswer2.value(),
+                        answer3 = layoutQuestionItem.etAnswer3.value(),
+                        answer4 = layoutQuestionItem.etAnswer4.value(),
+                        correctAnswer = correctAnswer
+                    )
 
-                questionToBeUpdated?.let {
-                    questionPosition?.let { pos -> getAdapter().updateQuestion(pos, newQuestion) }
-                    viewModel.updateQuestion(it, newQuestion, quizId)
-                } ?: run {
-                    getAdapter().addItem(newQuestion)
-                    hideNoQuestionsTextView()
-                    viewModel.uploadQuestion(newQuestion, quizId)
+                    questionToBeUpdated?.let {
+                        questionPosition?.let { pos ->
+                            getAdapter().updateQuestion(
+                                pos,
+                                newQuestion
+                            )
+                        }
+                        viewModel.updateQuestion(it, newQuestion, quizId)
+                    } ?: run {
+                        getAdapter().addItem(newQuestion)
+                        hideNoQuestionsTextView()
+                        viewModel.uploadQuestion(newQuestion, quizId)
+                    }
+                    dismiss()
+                } catch (e: IllegalArgumentException) {
+                    Snackbar.make(
+                        root,
+                        "Please make sure to mark the correct answer.",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
-                dismiss()
             }
         }
     }
@@ -134,7 +148,7 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
                 rbAnswer2.id -> etAnswer2.value()
                 rbAnswer3.id -> etAnswer3.value()
                 rbAnswer4.id -> etAnswer4.value()
-                else -> ""
+                else -> throw IllegalArgumentException("There can be only 4 types of correct answers.")
             }
         }
 }
