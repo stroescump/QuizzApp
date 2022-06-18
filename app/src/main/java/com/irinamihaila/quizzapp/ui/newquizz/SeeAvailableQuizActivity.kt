@@ -60,7 +60,7 @@ class SeeAvailableQuizActivity : BaseActivity() {
 
     override fun initViews() {
         with(binding) {
-            if(viewModel.userType == PLAYER) {
+            if (viewModel.userType == PLAYER) {
                 btnAddMore.hide()
             }
             rvAvailableQuizzez.adapter =
@@ -141,8 +141,10 @@ class SeeAvailableQuizActivity : BaseActivity() {
     }
 
     private fun handleLongClickQuiz(quiz: Quiz, quizPos: Int) {
-        QuizDetailsBottomSheetFragment.newInstance(quiz, quizPos)
-            .show(supportFragmentManager, QuizDetailsBottomSheetFragment::class.java.simpleName)
+        if (viewModel.userType == AUTHOR) {
+            QuizDetailsBottomSheetFragment.newInstance(quiz, quizPos)
+                .show(supportFragmentManager, QuizDetailsBottomSheetFragment::class.java.simpleName)
+        }
     }
 
     private fun handleOnQuizDelete() = { quiz: Quiz ->
