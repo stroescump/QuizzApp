@@ -107,15 +107,13 @@ fun getQuizzesCompleted(
     getUserNode(username).child("availableQuizzes")
         .addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.hasChildren()) {
-                    val availableQuizList = mutableListOf<Pair<String, Int?>>()
-                    snapshot.children.forEach {
-                        it.key?.let { quizName ->
-                            availableQuizList.add(quizName to getPercentage(it))
-                        }
+                val availableQuizList = mutableListOf<Pair<String, Int?>>()
+                snapshot.children.forEach {
+                    it.key?.let { quizName ->
+                        availableQuizList.add(quizName to getPercentage(it))
                     }
-                    handler(AppResult.Success(availableQuizList))
-                } else handler(AppResult.Error(Throwable("Unable to find any quizzes. Join one now to taste your first challenge.")))
+                }
+                handler(AppResult.Success(availableQuizList))
             }
 
             override fun onCancelled(error: DatabaseError) {
