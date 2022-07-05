@@ -1,4 +1,4 @@
-package com.irinamihaila.quizzapp.ui.newquizz
+package com.irinamihaila.quizzapp.ui.newquizz.createquiz
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +12,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.FragmentQuizDetailsBottomSheetBinding
 import com.irinamihaila.quizzapp.models.Quiz
+import com.irinamihaila.quizzapp.ui.newquizz.QuizAvailableAdapter
+import com.irinamihaila.quizzapp.ui.newquizz.availablequizzes.SeeAvailableQuizActivity
+import com.irinamihaila.quizzapp.ui.newquizz.takequiz.QuizViewModel
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.value
 import kotlinx.coroutines.flow.collectLatest

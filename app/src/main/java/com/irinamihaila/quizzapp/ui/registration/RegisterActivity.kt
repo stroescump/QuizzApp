@@ -1,6 +1,7 @@
 package com.irinamihaila.quizzapp.ui.registration
 
 import android.os.Bundle
+import android.util.Log
 import com.irinamihaila.quizzapp.databinding.ActivityRegisterBinding
 import com.irinamihaila.quizzapp.models.QuizUser
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
@@ -23,20 +24,25 @@ class RegisterActivity : BaseActivity() {
     override fun setupListeners() {
         with(binding) {
             btnRegister.setOnClickListener {
-                val role = when (rbGroupUserType.checkedRadioButtonId) {
-                    rbPlayer.id -> "PLAYER"
-                    rbAuthor.id -> "AUTHOR"
-                    else -> throw IllegalArgumentException("Cannot have other role than PLAYER / AUTHOR")
-                }
-                viewModel.register(
-                    QuizUser(
-                        etFullName.value(),
-                        etUsername.value(),
-                        etPassword.value(),
-                        "",
-                        role
+                try {
+                    val role = when (rbGroupUserType.checkedRadioButtonId) {
+                        rbPlayer.id -> "PLAYER"
+                        rbAuthor.id -> "AUTHOR"
+                        else -> throw IllegalArgumentException("Cannot have other role than PLAYER / AUTHOR")
+                    }
+                    viewModel.register(
+                        QuizUser(
+                            etFullName.value(),
+                            etUsername.value(),
+                            etPassword.value(),
+                            "",
+                            role
+                        )
                     )
-                )
+                } catch (e: IllegalArgumentException) {
+                    Log.e(this::class.java.simpleName, "setupListeners: ${e.localizedMessage}")
+                    displayError()
+                }
             }
         }
     }

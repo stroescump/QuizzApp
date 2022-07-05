@@ -11,7 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.FragmentLeaderboardBottomSheetBinding
-import com.irinamihaila.quizzapp.ui.newquizz.TakeQuizViewModel
+import com.irinamihaila.quizzapp.ui.newquizz.takequiz.TakeQuizViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

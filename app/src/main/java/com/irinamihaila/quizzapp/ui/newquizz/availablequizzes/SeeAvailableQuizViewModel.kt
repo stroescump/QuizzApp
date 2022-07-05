@@ -1,4 +1,4 @@
-package com.irinamihaila.quizzapp.ui.newquizz
+package com.irinamihaila.quizzapp.ui.newquizz.availablequizzes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

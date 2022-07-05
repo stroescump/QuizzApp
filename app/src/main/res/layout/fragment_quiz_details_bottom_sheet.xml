@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/dimen_30dp"
     android:paddingBottom="@dimen/dimen_50dp"
-    tools:context=".ui.newquizz.QuizDetailsBottomSheetFragment">
+    tools:context=".ui.newquizz.createquiz.QuizDetailsBottomSheetFragment">
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etQuizName"

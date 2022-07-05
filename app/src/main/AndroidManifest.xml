@@ -16,7 +16,7 @@
             android:name=".ui.feedback.FeedbackActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.newquizz.TakeQuizActivity"
+            android:name=".ui.newquizz.takequiz.TakeQuizActivity"
             android:exported="false" />
         <activity
             android:name=".ui.registration.RegisterActivity"
@@ -28,10 +28,10 @@
             android:name=".ui.dashboard.DashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.newquizz.CreateQuizActivity"
+            android:name=".ui.newquizz.createquiz.CreateQuizActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.newquizz.SeeAvailableQuizActivity"
+            android:name=".ui.newquizz.availablequizzes.SeeAvailableQuizActivity"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"

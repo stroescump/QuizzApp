@@ -1,4 +1,4 @@
-package com.irinamihaila.quizzapp.ui.newquizz
+package com.irinamihaila.quizzapp.ui.newquizz.createquiz
 
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -7,6 +7,8 @@ import com.irinamihaila.quizzapp.databinding.ActivityCreateQuizBinding
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
+import com.irinamihaila.quizzapp.ui.newquizz.QuizItemAdapter
+import com.irinamihaila.quizzapp.ui.newquizz.takequiz.QuizViewModel
 import com.irinamihaila.quizzapp.utils.*
 import com.irinamihaila.quizzapp.utils.Constants.IS_EDIT
 import com.irinamihaila.quizzapp.utils.Constants.IS_NEW_QUIZ

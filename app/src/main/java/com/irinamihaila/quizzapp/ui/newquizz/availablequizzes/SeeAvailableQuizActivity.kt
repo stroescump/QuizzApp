@@ -1,4 +1,4 @@
-package com.irinamihaila.quizzapp.ui.newquizz
+package com.irinamihaila.quizzapp.ui.newquizz.availablequizzes
 
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -11,6 +11,10 @@ import com.irinamihaila.quizzapp.models.UserType.*
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.DashboardActivity
 import com.irinamihaila.quizzapp.ui.feedback.FeedbackActivity
+import com.irinamihaila.quizzapp.ui.newquizz.QuizAvailableAdapter
+import com.irinamihaila.quizzapp.ui.newquizz.createquiz.CreateQuizActivity
+import com.irinamihaila.quizzapp.ui.newquizz.createquiz.QuizDetailsBottomSheetFragment
+import com.irinamihaila.quizzapp.ui.newquizz.takequiz.TakeQuizActivity
 import com.irinamihaila.quizzapp.utils.*
 import com.irinamihaila.quizzapp.utils.Constants.IS_EDIT
 import com.irinamihaila.quizzapp.utils.Constants.IS_NEW_QUIZ

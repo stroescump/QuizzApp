@@ -1,4 +1,4 @@
-package com.irinamihaila.quizzapp.ui.newquizz
+package com.irinamihaila.quizzapp.ui.newquizz.createquiz
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -11,6 +11,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.FragmentCreateQuizBottomSheetBinding
 import com.irinamihaila.quizzapp.models.Question
+import com.irinamihaila.quizzapp.ui.newquizz.QuizItemAdapter
+import com.irinamihaila.quizzapp.ui.newquizz.takequiz.QuizViewModel
 import com.irinamihaila.quizzapp.utils.Constants.QUIZ_ID
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.hide

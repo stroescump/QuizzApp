@@ -9,7 +9,7 @@ import com.irinamihaila.quizzapp.models.UserType
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory.*
 import com.irinamihaila.quizzapp.ui.login.LoginActivity
-import com.irinamihaila.quizzapp.ui.newquizz.SeeAvailableQuizActivity
+import com.irinamihaila.quizzapp.ui.newquizz.availablequizzes.SeeAvailableQuizActivity
 import com.irinamihaila.quizzapp.utils.Constants
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.viewBinding

@@ -1,4 +1,4 @@
-package com.irinamihaila.quizzapp.ui.newquizz
+package com.irinamihaila.quizzapp.ui.newquizz.takequiz
 
 import android.annotation.SuppressLint
 import android.os.Bundle

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.newquizz.CreateQuizActivity">
+    tools:context=".ui.newquizz.createquiz.CreateQuizActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvNewQuestions"
