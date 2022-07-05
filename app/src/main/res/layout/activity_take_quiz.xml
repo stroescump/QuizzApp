@@ -23,14 +23,27 @@
         app:layout_constraintTop_toBottomOf="@id/containerProfile"
         tools:text="8/10" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTimeCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginEnd="@dimen/dimen_40dp"
+        android:fontFamily="@font/coolvetica_rg"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dimen_20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/containerProfile"
+        tools:text="0:54" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:fillViewport="true"
         android:orientation="vertical"
-        android:scrollbars="vertical"
         android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvQuestionsCounter">
 

@@ -56,11 +56,25 @@ class TakeQuizActivity : BaseActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun initViews() {
         binding.containerProfile.tvFirstName.text = SharedPrefsUtils(this).getFullName()
         if (quizQuestionSize() > viewModel.currentQuestion.value) {
             prepareNextQuestion(viewModel.currentQuestion.value)
         }
+        lifecycleScope.launch {
+            viewModel.timerStateFlow.collect { remainingTime ->
+                if (remainingTime != TIME_IS_UP) {
+                    val minutes: Int = remainingTime / 60
+                    val seconds: Int = remainingTime % 60
+                    binding.tvTimeCounter.text = "$minutes:$seconds"
+                } else {
+                    displayInfo(getString(R.string.time_is_up_info))
+                    binding.btnSubmitAnswer.performClick()
+                }
+            }
+        }
+        viewModel.toggleTime(150)
     }
 
     override fun setupObservers() {
@@ -166,5 +180,9 @@ class TakeQuizActivity : BaseActivity() {
                     }
                 }
         }
+    }
+
+    companion object {
+        const val TIME_IS_UP = -1
     }
 }

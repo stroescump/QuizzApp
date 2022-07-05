@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.FragmentLeaderboardBottomSheetBinding
 import com.irinamihaila.quizzapp.ui.newquizz.takequiz.TakeQuizViewModel
+import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -50,6 +51,7 @@ class LeaderboardBottomSheetFragment : BottomSheetDialogFragment() {
     private fun setupObservers() {
         viewModel.leaderboardLiveData.observe(viewLifecycleOwner) { leaderboard ->
             val updatedList = leaderboard.toMutableList().also {
+                it.removeIf { player -> player.first == SharedPrefsUtils(requireContext()).getFullName() }
                 it.add("You" to getPercentage())
             }
             (binding.rvLeaderboard.adapter as LeaderboardItemAdapter).refreshList(updatedList.sortedByDescending { it.second })
