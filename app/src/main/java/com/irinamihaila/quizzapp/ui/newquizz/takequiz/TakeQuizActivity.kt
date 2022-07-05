@@ -71,10 +71,11 @@ class TakeQuizActivity : BaseActivity() {
                 } else {
                     displayInfo(getString(R.string.time_is_up_info))
                     binding.btnSubmitAnswer.performClick()
+                    binding.btnSubmitAnswer.performClick()
                 }
             }
         }
-        viewModel.toggleTime(150)
+        viewModel.toggleTime(2)
     }
 
     override fun setupObservers() {
