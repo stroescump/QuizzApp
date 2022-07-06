@@ -5,11 +5,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -89,14 +88,21 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
                 toString()
             }
             uri?.let { uriSafe ->
-                val outputStream = requireActivity().contentResolver.openOutputStream(uri!!)
                 val document = Document()
-                PdfWriter.getInstance(document, outputStream)
-                document.open()
-                document.addAuthor("CodeLib")
-                document.createPDF("Leaderboard ${quiz.name}", leaderboardFormatted)
-                document.close()
-                (requireActivity() as BaseActivity).displayInfo("PDF successfuly created.")
+                try {
+                    val outputStream = requireActivity().contentResolver.openOutputStream(uriSafe)
+                    PdfWriter.getInstance(document, outputStream)
+                    document.open()
+                    document.addAuthor("CodeLib")
+                    document.createPDF("Leaderboard ${quiz.name}", leaderboardFormatted)
+                    document.close()
+                    dismiss()
+                    (requireActivity() as BaseActivity).displayInfo("PDF successfully created.")
+                } catch (e: Throwable) {
+                    Log.e(this::class.java.simpleName, "setupObservers: ${e.localizedMessage}")
+                } finally {
+                    document.close()
+                }
             }
         }
     }
@@ -130,7 +136,7 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
                     quiz.id ?: throw IllegalStateException("Must have a valid QuizID")
                 )
                 val values = ContentValues()
-                values.put(MediaStore.MediaColumns.DISPLAY_NAME, "Leaderboard $quiz.name")
+                values.put(MediaStore.MediaColumns.DISPLAY_NAME, "Leaderboard ${quiz.name}")
                 values.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
                 values.put(
                     MediaStore.MediaColumns.RELATIVE_PATH,
