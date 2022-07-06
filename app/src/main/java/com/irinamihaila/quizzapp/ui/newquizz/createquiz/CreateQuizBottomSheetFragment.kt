@@ -61,14 +61,13 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
         with(binding) {
             btnAddQuestion.setOnClickListener {
                 try {
-                    val correctAnswer = getCorrectAnswer()
                     val newQuestion = Question(
                         question = layoutQuestionItem.etNewQuestion.value(),
                         answer1 = layoutQuestionItem.etAnswer1.value(),
                         answer2 = layoutQuestionItem.etAnswer2.value(),
                         answer3 = layoutQuestionItem.etAnswer3.value(),
                         answer4 = layoutQuestionItem.etAnswer4.value(),
-                        correctAnswer = correctAnswer
+                        correctAnswer = getCorrectAnswer()
                     )
 
                     questionToBeUpdated?.let {
@@ -86,11 +85,7 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
                     }
                     dismiss()
                 } catch (e: IllegalArgumentException) {
-                    Snackbar.make(
-                        root,
-                        "Please make sure to mark the correct answer.",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    displayError(e.localizedMessage)
                 }
             }
         }
@@ -145,12 +140,24 @@ class CreateQuizBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun getCorrectAnswer() =
         with(binding.layoutQuestionItem) {
-            when (rbGroup.checkedRadioButtonId) {
-                rbAnswer1.id -> etAnswer1.value()
-                rbAnswer2.id -> etAnswer2.value()
-                rbAnswer3.id -> etAnswer3.value()
-                rbAnswer4.id -> etAnswer4.value()
-                else -> throw IllegalArgumentException("There can be only 4 types of correct answers.")
+            try {
+                when (rbGroup.checkedRadioButtonId) {
+                    rbAnswer1.id -> etAnswer1.value()
+                    rbAnswer2.id -> etAnswer2.value()
+                    rbAnswer3.id -> etAnswer3.value()
+                    rbAnswer4.id -> etAnswer4.value()
+                    else -> throw IllegalArgumentException("Please make sure to select correct answer.")
+                }
+            } catch (e: IllegalArgumentException) {
+                throw e
             }
         }
+
+    private fun displayError(message: String?) {
+        Snackbar.make(
+            binding.root,
+            message ?: getText(R.string.generic_error),
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
 }

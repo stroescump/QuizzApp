@@ -75,7 +75,7 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
                 uiState?.let {
                     when (it.first) {
                         true -> dismiss()
-                        false -> displayError(it)
+                        false -> displayError(it.second)
                     }
                 }
             }
@@ -93,7 +93,6 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
                     val outputStream = requireActivity().contentResolver.openOutputStream(uriSafe)
                     PdfWriter.getInstance(document, outputStream)
                     document.open()
-                    document.addAuthor("CodeLib")
                     document.createPDF("Leaderboard ${quiz.name}", leaderboardFormatted)
                     document.close()
                     dismiss()
@@ -107,14 +106,10 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun getPercentage() =
-        (quiz.percentage
-            ?: throw IllegalStateException("Must have a percentage since we're asking for leaderboard."))
-
-    private fun displayError(it: Pair<Boolean, String?>) {
+    private fun displayError(message: String?) {
         Snackbar.make(
             binding.root,
-            it.second ?: getText(R.string.generic_error),
+            message ?: getText(R.string.generic_error),
             Snackbar.LENGTH_SHORT
         ).show()
     }
@@ -123,13 +118,16 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
         with(binding) {
             btnUpdateQuiz.setOnClickListener {
                 quiz.apply {
-                    name = etQuizName.value()
-                    issuedDate = etCreationDate.value()
-                    isRedo = switchIsRedo.isChecked
-
+                    try {
+                        name = etQuizName.value()
+                        issuedDate = etCreationDate.value()
+                        isRedo = switchIsRedo.isChecked
+                        getAdapter().updateItem(quiz, quizPos)
+                        viewModel.updateQuiz(quiz)
+                    }catch (e: IllegalArgumentException) {
+                        displayError(e.localizedMessage)
+                    }
                 }
-                getAdapter().updateItem(quiz, quizPos)
-                viewModel.updateQuiz(quiz)
             }
             btnExportQuizAsPDF.setOnClickListener {
                 leaderboardViewModel.getLeaderboard(

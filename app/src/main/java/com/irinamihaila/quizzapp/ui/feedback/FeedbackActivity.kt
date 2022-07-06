@@ -46,7 +46,11 @@ class FeedbackActivity : BaseActivity() {
                 AUTHOR -> {}
                 PLAYER -> {
                     btnSendFeedback.setOnClickListener {
-                        viewModel.sendFeedback(etFeedback.value(), quiz)
+                        try {
+                            viewModel.sendFeedback(etFeedback.value(), quiz)
+                        } catch (e: IllegalArgumentException) {
+                            displayError(e.localizedMessage)
+                        }
                     }
                 }
             }

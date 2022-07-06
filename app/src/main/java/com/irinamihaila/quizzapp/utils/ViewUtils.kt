@@ -78,6 +78,10 @@ fun getBitmapFromDrawable(
 ) =
     ResourcesCompat.getDrawable(resources, resInt, theme)?.toBitmap()
 
-fun AppCompatEditText.value() = this.text.toString()
+fun AppCompatEditText.value() = text?.let {
+    if (it.trim().toString()
+            .isBlank()
+    ) throw IllegalArgumentException("Please fill in $hint") else return@let this.text.toString()
+} ?: throw IllegalArgumentException("Please fill in $hint")
 
 fun String.toEditable() = Editable.Factory.getInstance().newEditable(this)
