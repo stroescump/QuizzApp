@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import com.irinamihaila.quizzapp.databinding.ActivityCreateQuizBinding
 import com.irinamihaila.quizzapp.models.Question
 import com.irinamihaila.quizzapp.ui.base.BaseActivity
+import com.irinamihaila.quizzapp.ui.dashboard.DashboardActivity
 import com.irinamihaila.quizzapp.ui.dashboard.QuizCategory
 import com.irinamihaila.quizzapp.ui.newquizz.QuizItemAdapter
 import com.irinamihaila.quizzapp.ui.newquizz.takequiz.QuizViewModel
@@ -52,8 +53,11 @@ class CreateQuizActivity : BaseActivity() {
     }
 
     override fun setupListeners() {
-        binding.btnAddMore.setOnClickListener {
-            showQuestionsBottomSheet()
+        with(binding) {
+            btnAddMore.setOnClickListener {
+                showQuestionsBottomSheet()
+            }
+            btnQuizDone.setOnClickListener { navigateTo(DashboardActivity::class.java, true) }
         }
     }
 
@@ -76,7 +80,7 @@ class CreateQuizActivity : BaseActivity() {
                 QuizItemAdapter(mutableListOf(), isEditMode) { question, pos ->
                     showQuestionsBottomSheet(question, pos)
                 }
-            if (isNewQuiz) {
+            if (isNewQuiz || getQuizAdapter().itemCount == 0) {
                 tvNoQuestions.show()
             }
         }
@@ -104,6 +108,7 @@ class CreateQuizActivity : BaseActivity() {
                         res.successData?.apply {
                             questions?.let {
                                 val questionsList = it.filterNotNull()
+                                if(questionsList.isNotEmpty()) binding.tvNoQuestions.hide()
                                 getQuizAdapter().refreshList(questionsList)
                             }
                         }

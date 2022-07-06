@@ -38,12 +38,25 @@
         android:id="@+id/btnAddMore"
         android:layout_width="@dimen/dimen_50dp"
         android:layout_height="@dimen/dimen_50dp"
+        android:layout_marginEnd="@dimen/dimen_20dp"
         android:layout_marginBottom="@dimen/dimen_10dp"
         android:background="@drawable/bg_profile_dashboard"
         android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnQuizDone"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnQuizDone"
+        android:layout_width="@dimen/dimen_50dp"
+        android:layout_height="@dimen/dimen_50dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:background="@drawable/bg_profile_dashboard"
+        android:src="@drawable/check"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnAddMore" />
 
     <include
         android:id="@+id/layoutProgress"
