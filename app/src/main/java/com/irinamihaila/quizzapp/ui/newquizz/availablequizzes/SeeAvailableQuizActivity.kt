@@ -127,21 +127,25 @@ class SeeAvailableQuizActivity : BaseActivity() {
     }
 
     private fun handleClickQuiz(quiz: Quiz) {
-        if (isPlayer(quiz)) {
-            navigateTo(
-                TakeQuizActivity::class.java,
-                true,
-                extras = Bundle().also { it.putParcelable("quiz", quiz) })
-        } else if (viewModel.userType == AUTHOR) {
-            navigateTo(
-                CreateQuizActivity::class.java,
-                true,
-                extras = Bundle().also {
-                    it.putParcelable(QUIZ_CATEGORY, viewModel.quizCategory)
-                    it.putBoolean(IS_EDIT, true)
-                    it.putString(QUIZ_ID, quiz.id)
-                })
-        } else displayError(getString(R.string.error_take_quiz_once))
+        when {
+            isPlayer(quiz) -> {
+                navigateTo(
+                    TakeQuizActivity::class.java,
+                    true,
+                    extras = Bundle().also { it.putParcelable("quiz", quiz) })
+            }
+            viewModel.userType == AUTHOR -> {
+                navigateTo(
+                    CreateQuizActivity::class.java,
+                    true,
+                    extras = Bundle().also {
+                        it.putParcelable(QUIZ_CATEGORY, viewModel.quizCategory)
+                        it.putBoolean(IS_EDIT, true)
+                        it.putString(QUIZ_ID, quiz.id)
+                    })
+            }
+            else -> displayError(getString(R.string.error_take_quiz_once))
+        }
     }
 
     private fun handleLongClickQuiz(quiz: Quiz, quizPos: Int) {

@@ -45,9 +45,11 @@ class QuizAvailableAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(quiz: Quiz, position: Int) {
             with(binding) {
-                btnSeeFeedback.show()
-                btnSeeFeedback.setOnClickListener {
-                    onFeedbackClickListener(quiz)
+                quiz.percentage?.let {
+                    btnSeeFeedback.show()
+                    btnSeeFeedback.setOnClickListener {
+                        onFeedbackClickListener(quiz)
+                    }
                 }
                 if (isAuthorMode) {
                     btnDeleteQuiz.show()
