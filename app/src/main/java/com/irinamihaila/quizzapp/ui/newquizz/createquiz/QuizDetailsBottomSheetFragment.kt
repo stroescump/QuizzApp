@@ -22,6 +22,7 @@ import com.irinamihaila.quizzapp.ui.newquizz.QuizAvailableAdapter
 import com.irinamihaila.quizzapp.ui.newquizz.availablequizzes.SeeAvailableQuizActivity
 import com.irinamihaila.quizzapp.ui.newquizz.takequiz.QuizViewModel
 import com.irinamihaila.quizzapp.ui.newquizz.takequiz.TakeQuizViewModel
+import com.irinamihaila.quizzapp.utils.Constants.dateFormatter
 import com.irinamihaila.quizzapp.utils.PdfUtils.createPDF
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.value
@@ -120,11 +121,13 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
                 quiz.apply {
                     try {
                         name = etQuizName.value()
-                        issuedDate = etCreationDate.value()
+                        issuedDate =
+                            dateFormatter.parse(etCreationDate.value())
+                                ?.let { date -> return@let dateFormatter.format(date) }
                         isRedo = switchIsRedo.isChecked
                         getAdapter().updateItem(quiz, quizPos)
                         viewModel.updateQuiz(quiz)
-                    }catch (e: IllegalArgumentException) {
+                    } catch (e: Throwable) {
                         displayError(e.localizedMessage)
                     }
                 }

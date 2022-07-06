@@ -23,7 +23,6 @@
     <string name="dashboardPlayerSubtitle">Choose a category to start playing</string>
     <string name="submit">Submit</string>
     <string name="quizFinished">Congrats! Here\'s how you did</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="error_take_quiz_once">Sorry. You can only take part in this quiz once.</string>
     <string name="dashboardTitleAuthor">What challenges will you bring today?</string>
@@ -33,7 +32,7 @@
     <string name="delete">Delete</string>
     <string name="update_question">Update question</string>
     <string name="quiz_name">Quiz name</string>
-    <string name="creation_date">Creation date</string>
+    <string name="creation_date">Creation date dd/MM/yy</string>
     <string name="is_redo_available">Is redo available</string>
     <string name="update_quiz">Update quiz</string>
     <string name="delete_successful">Quiz deleted successfully.</string>

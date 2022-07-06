@@ -13,10 +13,9 @@ import com.irinamihaila.quizzapp.utils.*
 import com.irinamihaila.quizzapp.utils.Constants.IS_EDIT
 import com.irinamihaila.quizzapp.utils.Constants.IS_NEW_QUIZ
 import com.irinamihaila.quizzapp.utils.Constants.QUIZ_ID
+import com.irinamihaila.quizzapp.utils.Constants.dateFormatter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 class CreateQuizActivity : BaseActivity() {
@@ -39,8 +38,7 @@ class CreateQuizActivity : BaseActivity() {
                 val quizCategory = it.getParcelable<QuizCategory>(Constants.QUIZ_CATEGORY)
                 viewModel.createQuiz(
                     quizCategory ?: throw IllegalStateException("Must have a valid quiz category"),
-                    SimpleDateFormat.getDateInstance(DateFormat.SHORT)
-                        .format(Calendar.getInstance().time)
+                    dateFormatter.format(Calendar.getInstance().time)
                 )
             } else {
                 viewModel.currentQuizId.value?.let { id ->
