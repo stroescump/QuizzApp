@@ -67,4 +67,15 @@
         app:layout_constraintStart_toStartOf="@id/etCreationDate"
         app:layout_constraintTop_toBottomOf="@id/switchIsRedo" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnExportQuizAsPDF"
+        style="@style/CustomButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:text="@string/export_results_as_pdf"
+        app:layout_constraintEnd_toEndOf="@id/etCreationDate"
+        app:layout_constraintStart_toStartOf="@id/etCreationDate"
+        app:layout_constraintTop_toBottomOf="@id/btnUpdateQuiz" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

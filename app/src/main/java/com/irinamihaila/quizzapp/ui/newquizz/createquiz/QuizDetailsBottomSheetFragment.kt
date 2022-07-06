@@ -1,9 +1,15 @@
 package com.irinamihaila.quizzapp.ui.newquizz.createquiz
 
+import android.content.ContentValues
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -12,11 +18,16 @@ import com.google.android.material.snackbar.Snackbar
 import com.irinamihaila.quizzapp.R
 import com.irinamihaila.quizzapp.databinding.FragmentQuizDetailsBottomSheetBinding
 import com.irinamihaila.quizzapp.models.Quiz
+import com.irinamihaila.quizzapp.ui.base.BaseActivity
 import com.irinamihaila.quizzapp.ui.newquizz.QuizAvailableAdapter
 import com.irinamihaila.quizzapp.ui.newquizz.availablequizzes.SeeAvailableQuizActivity
 import com.irinamihaila.quizzapp.ui.newquizz.takequiz.QuizViewModel
+import com.irinamihaila.quizzapp.ui.newquizz.takequiz.TakeQuizViewModel
+import com.irinamihaila.quizzapp.utils.PdfUtils.createPDF
 import com.irinamihaila.quizzapp.utils.SharedPrefsUtils
 import com.irinamihaila.quizzapp.utils.value
+import com.itextpdf.text.Document
+import com.itextpdf.text.pdf.PdfWriter
 import kotlinx.coroutines.flow.collectLatest
 
 private const val ARG_QUIZ = "QUIZ"
@@ -25,12 +36,14 @@ private const val DEFAULT_VALUE = 0
 
 class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var quiz: Quiz
+    private var uri: Uri? = null
     private var quizPos: Int = DEFAULT_VALUE
     private val viewModel by activityViewModels<QuizViewModel> {
         QuizViewModel.Factory(
             SharedPrefsUtils(requireContext())
         )
     }
+    private val leaderboardViewModel by activityViewModels<TakeQuizViewModel>()
     private lateinit var binding: FragmentQuizDetailsBottomSheetBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +53,7 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
             quiz = it.getParcelable(ARG_QUIZ)
                 ?: throw IllegalArgumentException("Need a quiz passed as params.")
         }
+        leaderboardViewModel.quiz = quiz
     }
 
     override fun onCreateView(
@@ -67,7 +81,29 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+        leaderboardViewModel.leaderboardLiveData.observe(viewLifecycleOwner) { leaderboard ->
+            val leaderboardFormatted = with(StringBuilder()) {
+                leaderboard.sortedByDescending { it.second }.forEach {
+                    appendLine("${it.first} scored ${it.second}%")
+                }
+                toString()
+            }
+            uri?.let { uriSafe ->
+                val outputStream = requireActivity().contentResolver.openOutputStream(uri!!)
+                val document = Document()
+                PdfWriter.getInstance(document, outputStream)
+                document.open()
+                document.addAuthor("CodeLib")
+                document.createPDF("Leaderboard ${quiz.name}", leaderboardFormatted)
+                document.close()
+                (requireActivity() as BaseActivity).displayInfo("PDF successfuly created.")
+            }
+        }
     }
+
+    private fun getPercentage() =
+        (quiz.percentage
+            ?: throw IllegalStateException("Must have a percentage since we're asking for leaderboard."))
 
     private fun displayError(it: Pair<Boolean, String?>) {
         Snackbar.make(
@@ -88,6 +124,22 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
                 }
                 getAdapter().updateItem(quiz, quizPos)
                 viewModel.updateQuiz(quiz)
+            }
+            btnExportQuizAsPDF.setOnClickListener {
+                leaderboardViewModel.getLeaderboard(
+                    quiz.id ?: throw IllegalStateException("Must have a valid QuizID")
+                )
+                val values = ContentValues()
+                values.put(MediaStore.MediaColumns.DISPLAY_NAME, "Leaderboard $quiz.name")
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+                values.put(
+                    MediaStore.MediaColumns.RELATIVE_PATH,
+                    Environment.DIRECTORY_DOCUMENTS + "/QuizApp_Leaderboards"
+                )
+                uri = requireActivity().contentResolver.insert(
+                    MediaStore.Files.getContentUri("external"),
+                    values
+                )
             }
         }
     }

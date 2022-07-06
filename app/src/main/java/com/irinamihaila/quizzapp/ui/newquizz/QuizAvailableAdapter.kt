@@ -52,6 +52,10 @@ class QuizAvailableAdapter(
                     }
                 }
                 if (isAuthorMode) {
+                    btnSeeFeedback.show()
+                    btnSeeFeedback.setOnClickListener {
+                        onFeedbackClickListener(quiz)
+                    }
                     btnDeleteQuiz.show()
                     btnDeleteQuiz.setOnClickListener {
                         deleteItem()
