@@ -120,10 +120,10 @@ class QuizDetailsBottomSheetFragment : BottomSheetDialogFragment() {
             btnUpdateQuiz.setOnClickListener {
                 quiz.apply {
                     try {
-                        name = etQuizName.value()
                         issuedDate =
                             dateFormatter.parse(etCreationDate.value())
                                 ?.let { date -> return@let dateFormatter.format(date) }
+                        name = "${etQuizName.value()} - $issuedDate"
                         isRedo = switchIsRedo.isChecked
                         getAdapter().updateItem(quiz, quizPos)
                         viewModel.updateQuiz(quiz)
