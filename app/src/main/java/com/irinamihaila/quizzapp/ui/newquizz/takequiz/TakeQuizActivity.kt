@@ -23,6 +23,7 @@ class TakeQuizActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         intent.getBundleExtra("data")?.getParcelable<Quiz>("quiz")?.let { quiz ->
             viewModel.quiz = quiz
+            viewModel.toggleTime(TIME_PER_QUESTION * (quiz.questions?.size ?: 1))
         }
         super.onCreate(savedInstanceState)
     }
@@ -44,9 +45,11 @@ class TakeQuizActivity : BaseActivity() {
                 lifecycleScope.launch {
                     val quizFinishedString = getString(R.string.quizFinished)
                     if (isQuizFinished() && isDisplayLeaderboardNeeded(quizFinishedString).not()) {
+                        viewModel.stopTimer()
                         btnSubmitAnswer.text = quizFinishedString
                         sendResults()
                     } else if (isDisplayLeaderboardNeeded(quizFinishedString)) {
+                        viewModel.stopTimer()
                         displayLeaderboard()
                     } else {
                         viewModel.currentQuestion.update { it.inc() }
@@ -64,18 +67,21 @@ class TakeQuizActivity : BaseActivity() {
         }
         lifecycleScope.launch {
             viewModel.timerStateFlow.collect { remainingTime ->
-                if (remainingTime != TIME_IS_UP) {
-                    val minutes: Int = remainingTime / 60
-                    val seconds: Int = remainingTime % 60
-                    binding.tvTimeCounter.text = "$minutes:$seconds"
-                } else {
-                    displayInfo(getString(R.string.time_is_up_info))
-                    binding.btnSubmitAnswer.performClick()
-                    binding.btnSubmitAnswer.performClick()
+                when (remainingTime) {
+                    TakeQuizViewModel.TIMER_COMPLETED -> {
+                        displayInfo(getString(R.string.time_is_up_info))
+                        binding.btnSubmitAnswer.performClick()
+                        binding.btnSubmitAnswer.performClick()
+                    }
+                    TakeQuizViewModel.TIMER_CANCELLED -> {}
+                    else -> {
+                        val minutes: Int = remainingTime / 60
+                        val seconds: Int = remainingTime % 60
+                        binding.tvTimeCounter.text = "$minutes:$seconds"
+                    }
                 }
             }
         }
-        viewModel.toggleTime(2)
     }
 
     override fun setupObservers() {
@@ -185,5 +191,6 @@ class TakeQuizActivity : BaseActivity() {
 
     companion object {
         const val TIME_IS_UP = -1
+        const val TIME_PER_QUESTION = 15 // in seconds
     }
 }

@@ -52,7 +52,11 @@ class TakeQuizViewModel : ViewModel() {
         job = if (job == null) {
             viewModelScope.launch {
                 initTimer(totalSeconds)
-                    .onCompletion { _timerStateFlow.emit(-1) }
+                    .onCompletion { e ->
+                        e?.let { _timerStateFlow.emit(TIMER_CANCELLED) } ?: _timerStateFlow.emit(
+                            TIMER_COMPLETED
+                        )
+                    }
                     .collect { _timerStateFlow.emit(it) }
             }
         } else {
@@ -60,6 +64,8 @@ class TakeQuizViewModel : ViewModel() {
             null
         }
     }
+
+    fun stopTimer() = job?.cancel()
 
     /**
      * The timer emits the total seconds immediately.
@@ -74,4 +80,9 @@ class TakeQuizViewModel : ViewModel() {
             .transform { remainingSeconds: Int ->
                 emit(remainingSeconds)
             }
+
+    companion object {
+        const val TIMER_CANCELLED = -2
+        const val TIMER_COMPLETED = -1
+    }
 }
