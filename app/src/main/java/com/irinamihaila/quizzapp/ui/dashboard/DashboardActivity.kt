@@ -81,9 +81,18 @@ class DashboardActivity : BaseActivity() {
 
 @Parcelize
 sealed class QuizCategory(val name: String) : Parcelable {
+    @Parcelize
     object QuizGeneralKnowledge : QuizCategory("GENERAL_KNOWLEDGE")
+
+    @Parcelize
     object QuizScience : QuizCategory("SCIENCE")
+
+    @Parcelize
     object QuizArt : QuizCategory("ART")
+
+    @Parcelize
     object QuizForeignLanguages : QuizCategory("FOREIGN_LANGUAGES")
+
+    @Parcelize
     object QuizOther : QuizCategory("OTHER")
 }
