@@ -36,6 +36,7 @@ class MainActivity : BaseActivity() {
                     }
                 } else {
                     navigateTo(LoginActivity::class.java)
+                    //TODO remove this spacing
                 }
             }
         }
