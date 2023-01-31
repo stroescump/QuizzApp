@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "800293050527",
+    "firebase_url": "https://aplicatie-disertatie-65f64-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "aplicatie-disertatie-65f64",
+    "storage_bucket": "aplicatie-disertatie-65f64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:800293050527:android:6fc7b866a9a47e9807eaaa",
+        "android_client_info": {
+          "package_name": "com.irinamihaila.quizzapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "800293050527-2vh3ekvtc6hto7ohsj4oub9j21odmetp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2lfpNEL3BNAox2bnb5vUjmZToTEBxA1I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "800293050527-2vh3ekvtc6hto7ohsj4oub9j21odmetp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
